@@ -49,7 +49,12 @@ set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 
 # External files
 set(EXT_GLFW_DIR "${CMAKE_SOURCE_DIR}/_external_shared/GLFW")
+set(EXT_GLAD_DIR "${CMAKE_SOURCE_DIR}/_external_shared/Glad")
 set(EXT_IMGUI_DIR "${CMAKE_SOURCE_DIR}/_external_shared/ImGui")
+
+# Add GLAD
+add_library(glad STATIC ${EXT_GLAD_DIR}/glad.c)
+target_include_directories(glad PUBLIC ${EXT_GLAD_DIR}/..)
 
 # Add GLFW
 if (WIN32)
@@ -61,6 +66,10 @@ if (WIN32)
 else()
 	find_package(glfw3 REQUIRED)
 endif()
+
+# Group external libraries
+add_library(external_libs INTERFACE)
+target_link_libraries(external_libs INTERFACE glad)
 
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
@@ -96,18 +105,19 @@ target_compile_features(ElypsoBrowser PRIVATE cxx_std_20)
 target_include_directories(ElypsoBrowser PRIVATE
     ${INCLUDE_DIR}
     ${EXT_GLFW_DIR}
+	${EXT_GLAD_DIR}
 	${EXT_IMGUI_DIR}
 )
 
 if (WIN32)
-	target_link_libraries(ElypsoBrowser PRIVATE ${GLFW_LIBRARY_PATH})
+	target_link_libraries(ElypsoBrowser PRIVATE external_libs ${GLFW_LIBRARY_PATH})
 else()
 	find_package(Wayland QUIET)
 	find_package(X11 QUIET)
 	if (Wayland_FOUND)
-		target_link_libraries(ElypsoBrowser PRIVATE glfw Wayland::Client)
+		target_link_libraries(ElypsoBrowser PRIVATE external_libs glfw Wayland::Client)
 	elseif (X11_FOUND)
-		target_link_libraries(ElypsoBrowser PRIVATE glfw ${X11_LIBRARIES})
+		target_link_libraries(ElypsoBrowser PRIVATE external_libs glfw ${X11_LIBRARIES})
 	endif()
 endif()
 

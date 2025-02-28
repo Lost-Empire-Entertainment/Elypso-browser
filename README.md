@@ -1,0 +1,1 @@
+This is a repository for an upcoming browser that is self-made, except with some libraries that were used in the making of this browser.
