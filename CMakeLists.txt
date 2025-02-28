@@ -50,7 +50,9 @@ set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 # External files
 set(EXT_GLFW_DIR "${CMAKE_SOURCE_DIR}/_external_shared/GLFW")
 set(EXT_GLAD_DIR "${CMAKE_SOURCE_DIR}/_external_shared/Glad")
+set(EXT_GLM_DIR "${CMAKE_SOURCE_DIR}/_external_shared/GLM")
 set(EXT_IMGUI_DIR "${CMAKE_SOURCE_DIR}/_external_shared/ImGui")
+set(EXT_STB_IMAGE_DIR "${CMAKE_SOURCE_DIR}/_external_shared/Stb_image")
 
 # Add GLAD
 add_library(glad STATIC ${EXT_GLAD_DIR}/glad.c)
@@ -86,6 +88,7 @@ list(APPEND SOURCE_FILES
 	${EXT_IMGUI_DIR}/imgui_impl_opengl3.cpp
 	${EXT_IMGUI_DIR}/imgui_tables.cpp
 	${EXT_IMGUI_DIR}/imgui_widgets.cpp
+	${EXT_STB_IMAGE_DIR}/stb_image.cpp
 )
 
 # Build as browser executable
@@ -104,9 +107,16 @@ target_compile_features(ElypsoBrowser PRIVATE cxx_std_20)
 # Apply all directories to target
 target_include_directories(ElypsoBrowser PRIVATE
     ${INCLUDE_DIR}
+	${INCLUDE_DIR}/core
+	${INCLUDE_DIR}/files
+	${INCLUDE_DIR}/graphics
+	${INCLUDE_DIR}/gui
+	${INCLUDE_DIR}/utils
     ${EXT_GLFW_DIR}
 	${EXT_GLAD_DIR}
+	${EXT_GLM_DIR}
 	${EXT_IMGUI_DIR}
+	${EXT_STB_IMAGE_DIR}
 )
 
 if (WIN32)
@@ -127,6 +137,14 @@ target_compile_definitions(ElypsoBrowser PRIVATE GLFW_INCLUDE_NONE)
 # Set the folder inside the install folder where the exe will be placed for this project
 set(CMAKE_INSTALL_BINDIR bin)
 install(TARGETS ElypsoBrowser DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# Copy "files" directory to the install directory after build
+add_custom_command(TARGET ElypsoBrowser POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E remove_directory
+    $<TARGET_FILE_DIR:ElypsoBrowser>/files
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/files $<TARGET_FILE_DIR:ElypsoBrowser>/files
+)
 
 # Copy GLFW DLL to the install directory after build
 if (WIN32)

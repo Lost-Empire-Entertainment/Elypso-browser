@@ -1,12 +1,15 @@
-﻿// Elypso browser.cpp : Defines the entry point for the application.
-//
+﻿//Copyright(C) 2025 Lost Empire Entertainment
+//This program comes with ABSOLUTELY NO WARRANTY.
+//This is free software, and you are welcome to redistribute it under certain conditions.
+//Read LICENSE.md for more information.
 
-#include "main.hpp"
+//browser
+#include "core.hpp"
 
-using namespace std;
+using Core::Browser;
 
 int main()
-{
-	cout << "Hello CMake." << endl;
-	return 0;
+{	
+	Browser::Initialize();
+	Browser::Render();
 }
