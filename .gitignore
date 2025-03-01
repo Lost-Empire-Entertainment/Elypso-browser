@@ -1,3 +1,4 @@
 # Elypso Browser ignored files and folders
 .vs/
 out/
+*.pdb

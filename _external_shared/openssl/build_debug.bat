@@ -23,13 +23,13 @@ cd /d "%BUILD_DIR%" || (
 
 :: Configure OpenSSL for Debug build
 echo [INFO] Configuring OpenSSL for DEBUG...
-perl "%OPENSSL_ROOT%\Configure" VC-WIN64A --prefix="%INSTALL_DIR%" no-weak-ssl-ciphers no-tests no-docs debug || (
+perl "%OPENSSL_ROOT%\Configure" debug-VC-WIN64A --prefix="%INSTALL_DIR%" no-weak-ssl-ciphers no-tests no-docs || (
     echo [ERROR] OpenSSL configuration failed for DEBUG.
     pause
     exit /b 1
 )
 
-echo [INFO] Building OpenSSL DEBUG version (single-threaded)...
+echo [INFO] Building OpenSSL DEBUG version...
 nmake || (
     echo [ERROR] DEBUG Build process failed.
     pause
@@ -46,3 +46,4 @@ nmake install_sw || (
 echo [SUCCESS] OpenSSL DEBUG version built and installed successfully.
 pause
 exit /b 0
+
