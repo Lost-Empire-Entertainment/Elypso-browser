@@ -16,7 +16,7 @@ Lost Empire Entertainment does not own, did not create, does not actively develo
 | **GLM**        | MIT             | Math library for graphics and physics |
 | **Glad**       | MIT             | OpenGL function loader |
 | **khrplatform.h (in Glad folder)** | Apache 2.0 | OpenGL platform definitions |
-| **ImGui**      | MIT             | Immediate Mode GUI for debugging |
+| **ImGui**      | MIT             | Immediate Mode GUI for core browser GUI |
 
 ## Fonts & Text Rendering
 | Library        | License                  | Purpose |
