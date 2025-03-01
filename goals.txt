@@ -1,0 +1,36 @@
+Replace LiteHTML's Software Renderer
+
+    LiteHTML currently uses CPU-based drawing (GDI, Cairo, etc.).
+    Modify it to output its layout to an OpenGL framebuffer instead.
+
+Render HTML Elements Using OpenGL
+
+    Text Rendering: Use FreeType + HarfBuzz, but instead of software rasterization:
+        Convert text glyphs to OpenGL textures.
+        Render them as quads with shaders.
+
+    Box Model & Layout: Draw divs, spans, and containers as:
+        Textured quads for backgrounds.
+        Border rendering via shaders.
+        Gradients & shadows using fragment shaders.
+
+    Image Rendering:
+        Load images using stb_image.
+        Upload them to OpenGL as textures.
+        Apply scaling, rotation, and filters via shaders.
+
+Handle CSS with OpenGL Shaders
+
+    Shaders for Borders, Shadows, and Effects
+    Transformations (rotate, scale, skew) using GLM matrices
+    GPU-based clipping for overflow handling
+
+Improve Performance with Framebuffer & Caching
+
+    Use Framebuffers (FBOs) to store pre-rendered page elements.
+    Cache rendered elements to avoid re-drawing everything on minor updates.
+
+Input & Event Handling
+
+    Connect LiteHTML’s event system to GLFW’s input events.
+    Handle mouse clicks, scrolling, and hover states in OpenGL.

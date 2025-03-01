@@ -19,7 +19,7 @@ Note: Modifying the structure or location of any of the external library files i
 
 #### Networking & Security
 - **LibCurl** - HTTP(S) networking
-- **NGHTTP2** - HTTP/2 support (optional, but useful for modern sites)
+- **NGHTTP2** - HTTP/2 support
 - **OpenSSL** - TLS/SSL for secure connections
 - **LibWebSockets** - WebSockets support for real-time web communication
 - **LibDataChannel** - WebRTC implementation for peer-to-peer communication
