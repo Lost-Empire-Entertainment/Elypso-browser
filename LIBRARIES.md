@@ -11,3 +11,7 @@ Full list of libraries:
 - [GLFW - Creates the engine window and handles User input](https://github.com/glfw/glfw)
 - [ImGui - Handles all the engine GUI](https://github.com/ocornut/imgui)
 - [stb_image - Imports images](https://github.com/nothings/stb/blob/master/stb_image.h)
+- [OpenSSL - Handles encryption, decryption, secure communication](https://github.com/openssl/openssl)
+- [NGHTTP2 - Used for efficient and multiplexed communication between clients and servers](https://github.com/nghttp2/nghttp2)
+- [LibPsl - Handles domain name parsing using the Public Suffix List](https://github.com/rockdaboot/libpsl)
+- [LibCurl - Used for transferring data over various network protocols](https://github.com/curl/curl)
