@@ -2,5 +2,6 @@ Original repository link:
 https://github.com/nghttp2/nghttp2
 
 Changes:
-- used build_release.bat to make nghttp2.dll and nghttp2.lib and copied them into new empty folder release
-- copied nghttp2.h and nghttp2ver.h to root folder
+- ran build_release.bat and copied dll and lib files to release folder and header files to root folder
+- ran build_debug.bat and copied dll and lib files to debug folder
+- deleted all other files

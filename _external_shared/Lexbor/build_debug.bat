@@ -1,15 +1,16 @@
 @echo off
 
-:: This batch file builds GLFW from source code using MSVC (cl.exe) for Debug.
+:: This batch file builds Lexbor from source code using MSVC (cl.exe) for Debug.
 
 :: Set the root folder as the location of this script
-set "GLFW_ROOT=%~dp0"
-set "BUILD_DIR=%GLFW_ROOT%build-debug"
-set "INSTALL_DIR=%GLFW_ROOT%install-debug"
+set "LEXBOR_ROOT=%~dp0"
+set "BUILD_DIR=%LEXBOR_ROOT%build-debug"
+set "INSTALL_DIR=%LEXBOR_ROOT%install-debug"
 
-:: Ensure Visual Studio environment is set up
+:: Ensure Visual Studio environment is set up correctly
 call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" || (
     echo [ERROR] Failed to set up Visual Studio environment.
+	pause
     exit /b 1
 )
 
@@ -20,36 +21,48 @@ for /f "tokens=1-4 delims=:.," %%a in ("%TIME%") do set "TIME_START=%%a:%%b:%%c"
 if not exist "%BUILD_DIR%" mkdir "%BUILD_DIR%"
 cd /d "%BUILD_DIR%" || (
     echo [ERROR] Failed to access build directory: %BUILD_DIR%
+	pause
     exit /b 1
 )
 
-:: Configure GLFW with CMake
-echo [INFO] Configuring GLFW with CMake...
+:: Configure Lexbor with CMake for Debug mode
+echo [INFO] Configuring Lexbor with CMake (Debug mode)...
 cmake -G "Ninja" ^
   -DCMAKE_BUILD_TYPE=Debug ^
   -DCMAKE_C_COMPILER=cl ^
   -DBUILD_SHARED_LIBS=ON ^
-  -DGLFW_BUILD_EXAMPLES=OFF ^
-  -DGLFW_BUILD_TESTS=OFF ^
-  -DGLFW_BUILD_DOCS=OFF ^
-  -DCMAKE_C_FLAGS="/Od /Zi /EHsc /MDd" ^
+  -DLEXBOR_BUILD_STATIC=OFF ^
+  -DLEXBOR_BUILD_SEPARATELY=OFF ^
+  -DLEXBOR_BUILD_EXAMPLES=OFF ^
+  -DLEXBOR_BUILD_TESTS=OFF ^
+  -DLEXBOR_BUILD_TESTS_CPP=OFF ^
+  -DLEXBOR_BUILD_UTILS=OFF ^
+  -DLEXBOR_BUILD_WITH_ASAN=OFF ^
+  -DLEXBOR_BUILD_WITH_FUZZER=OFF ^
+  -DLEXBOR_WITH_PERF=OFF ^
+  -DLEXBOR_MAKE_PACKAGES_FILES=OFF ^
+  -DCMAKE_C_FLAGS="/Zi /Od /D_DEBUG /MDd" ^
+  -DCMAKE_CXX_FLAGS="/Zi /Od /D_DEBUG /MDd" ^
   -DCMAKE_INSTALL_PREFIX="%INSTALL_DIR%" ^
-  "%GLFW_ROOT%" || (
+  "%LEXBOR_ROOT%" || (
     echo [ERROR] CMake configuration failed.
+	pause
     exit /b 1
 )
 
-:: Build GLFW with Ninja
-echo [INFO] Building GLFW...
+:: Build Lexbor with Ninja
+echo [INFO] Building Lexbor (Debug mode)...
 ninja -j%NUMBER_OF_PROCESSORS% || (
     echo [ERROR] Build process failed.
+	pause
     exit /b 1
 )
 
-:: Install GLFW
-echo [INFO] Installing GLFW...
+:: Install Lexbor
+echo [INFO] Installing Lexbor...
 ninja install || (
     echo [ERROR] Install process failed.
+	pause
     exit /b 1
 )
 
@@ -57,10 +70,12 @@ ninja install || (
 for /f "tokens=1-4 delims=:.," %%a in ("%TIME%") do set "TIME_END=%%a:%%b:%%c"
 
 :: Success message
-echo [SUCCESS] GLFW built and installed successfully.
+echo [SUCCESS] Lexbor built and installed successfully (Debug mode).
 echo ---------------------------------------------
-echo Static library: %INSTALL_DIR%\lib\glfw3.lib
-echo Include headers: %INSTALL_DIR%\include\GLFW
+echo Static library: %INSTALL_DIR%\lib
+
+echo Include headers: %INSTALL_DIR%\include
+
 echo Build duration: %TIME_START% - %TIME_END%
 echo ---------------------------------------------
 
