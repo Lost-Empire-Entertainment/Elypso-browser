@@ -3,6 +3,10 @@ The files in this repository are licensed under the zlib license, except for the
 Elypso Browser library repository
 https://github.com/Lost-Empire-Entertainment/Elypso-browser
 
+The Zlib License
+
+Copyright (c) <2025> <Lost Empire Entertainment>
+
 This software is provided 'as-is', without any express or implied warranty.
 In no event will the authors be held liable for any damages arising from the use of this software.
 Permission is granted to anyone to use this software for any purpose,
