@@ -16,7 +16,7 @@ Elypso Browser is licensed, not sold, to you. Under this Agreement, you are gran
 
 You **may not**:
 - Use the Software for unlawful or malicious activities.
-- Distribute modified binaries **without indicating that they are modified from the original version**.
+- Distribute modified binaries **only if they include a clear notice stating that they have been modified from the original version** and are not endorsed by the original authors.
 - Use the Software in a manner that infringes any third-party rights.
 
 This license remains **perpetual and irrevocable** as per the terms of the Zlib License.
@@ -25,7 +25,9 @@ This license remains **perpetual and irrevocable** as per the terms of the Zlib 
 
 ## 2. **INTELLECTUAL PROPERTY & TRADEMARKS**
 
-The source code of the Software is open-source and licensed under the Zlib License. However, **the name "Elypso Browser" and its associated logos are trademarks** of the authors. The use of these trademarks is permitted as long as it is in **good faith** and does not **misrepresent the project, harm the brand’s reputation, or cause financial damage**. Unauthorized use in a way that could mislead users into believing a modified version is an official release is not permitted.
+The source code of the Software is open-source and licensed under the Zlib License. However, **the name "Elypso Browser" and its associated logos are trademarks** of the authors. 
+
+The use of these trademarks is permitted for referential purposes and fair use, provided it does not mislead users, imply official endorsement of modified versions, or tarnish the reputation of the project.
 
 ---
 
@@ -43,7 +45,7 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY DAMAGES, IN
 
 ## 5. **PRIVACY & DATA COLLECTION**
 
-This Software does not collect, track, or transmit any personal data. Any online services accessed through the Software are subject to their respective privacy policies.
+This Software does not collect, track, or transmit any personal data to external servers. All stored data, including cookies, browsing history, and cached content, remains locally on the user's device and is not uploaded or shared. Any online services accessed through the Software are subject to their respective privacy policies.
 
 ---
 
