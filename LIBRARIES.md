@@ -14,7 +14,7 @@ Note: Modifying the structure or location of any of the external library files i
 - **ImGui** - Debug UI
 
 #### Web Rendering
-- **LiteHTML** - HTML & CSS parsing/rendering
+- **Lexbor** – High-performance HTML & CSS parser with full DOM support
 - **QuickJS** - JavaScript engine
 
 #### Networking & Security
