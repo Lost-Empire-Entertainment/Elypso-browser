@@ -2,6 +2,6 @@ Original repository link:
 https://github.com/rockdaboot/libpsl
 
 Changes:
-- ran build_release.bat and copied dll, lib, pdb and exe files to release folder and header files to root folder
-- ran build_debug.bat and copied dll, lib, pdb and exe files to debug folder
+- ran build_release.bat and copied dll and lib files to release folder and header files to root folder
+- ran build_debug.bat and copied dll and lib files to debug folder
 - deleted all other files
