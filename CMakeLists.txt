@@ -192,6 +192,7 @@ target_include_directories(ElypsoBrowser PRIVATE
 	${INCLUDE_DIR}/graphics
 	${INCLUDE_DIR}/gui
 	${INCLUDE_DIR}/utils
+	${INCLUDE_DIR}/networking
 	
 	# External libraries
     ${EXT_GLFW_DIR}
