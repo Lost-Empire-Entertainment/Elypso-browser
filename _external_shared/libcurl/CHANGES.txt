@@ -2,4 +2,22 @@ Original repository link:
 https://github.com/curl/curl
 
 Changes:
-- 
+- replaced '#include <nghttp2/nghttp2.h>' with '#include <nghttp2.h>' in the following files
+	
+	lib\cf-h2-proxy.c
+	lib\asyn-thread.c
+	lib\cf-haproxy.c
+	lib\altsvc.c
+	lib\cf-socket.c
+	lib\bufref.c
+	lib\cf-https-connect.c
+	lib\conncache.c
+	lib\cf-h1-proxy.c
+	lib\cfilters.c
+	lib\connect.c
+	lib\content_encoding.c
+	
+- replaced '#include <brotli/decode.h>' with '#include <decode.h>' in the following files
+
+	lib\content_encoding.c
+	lib\version.c

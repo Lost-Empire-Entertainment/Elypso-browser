@@ -1,0 +1,29 @@
+Original repository link:
+https://github.com/google/brotli
+
+Changes:
+- ran build_release.bat and copied dll and lib files to release folder and header files to root folder
+- ran build_debug.bat and copied dll and lib files to debug folder
+- deleted all other files
+
+- replaced the following lines in decode.h and encode.h
+
+	#include <brotli/port.h>
+	#include <brotli/shared_dictionary.h>
+	#include <brotli/types.h>
+	
+	with
+	
+	#include <port.h>
+	#include <shared_dictionary.h>
+	#include <types.h>
+	
+- replaced the following lines in shared_dictionary.h
+	
+	#include <brotli/port.h>
+	#include <brotli/types.h>
+
+	with 
+	
+	#include <port.h>
+	#include <types.h>

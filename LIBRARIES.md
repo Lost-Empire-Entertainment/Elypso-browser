@@ -29,7 +29,7 @@ Lost Empire Entertainment does not own, did not create, does not actively develo
 | Library         | License     | Purpose |
 |----------------|------------|---------|
 | **Lexbor**     | Apache 2.0  | HTML parsing and rendering |
-| none           | -           | Lightweight JavaScript engine |
+| none           | -           | JavaScript engine |
 
 ## Networking & Communication
 | Library           | License      | Purpose |
@@ -39,6 +39,8 @@ Lost Empire Entertainment does not own, did not create, does not actively develo
 | **LibWebSockets**| MIT         | WebSockets support |
 | **LibDataChannel** | MPL-2.0   | WebRTC peer-to-peer communication |
 | **OpenSSL**      | Apache 2.0  | TLS/SSL encryption |
+| **Brotli**       | MIT         | HTTP content compression/decompression |
+| **Zstd**         | BSD         | Advanced data compression (Zstandard) |
 
 ## Storage & Data Management
 | Library     | License       | Purpose |

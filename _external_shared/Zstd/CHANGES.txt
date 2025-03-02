@@ -1,8 +1,7 @@
 Original repository link:
-https://github.com/nghttp2/nghttp2
+https://github.com/facebook/zstd
 
 Changes:
 - ran build_release.bat and copied dll and lib files to release folder and header files to root folder
 - ran build_debug.bat and copied dll and lib files to debug folder
 - deleted all other files
-- replaced '#include <nghttp2/nghttp2ver.h>' with '#include <nghttp2ver.h>' in nghttp2.h
