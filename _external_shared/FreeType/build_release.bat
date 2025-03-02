@@ -32,6 +32,7 @@ cmake -G "Ninja" ^
   -DBUILD_SHARED_LIBS=ON ^
   -DCMAKE_C_FLAGS="/O2 /GL /DNDEBUG /EHsc /MD" ^
   -DCMAKE_INSTALL_PREFIX="%INSTALL_DIR%" ^
+  -DFT_DISABLE_BROTLI=TRUE ^
   "%FREETYPE_ROOT%" || (
     echo [ERROR] CMake configuration failed.
     pause
