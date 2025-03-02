@@ -8,6 +8,9 @@
 #include <filesystem>
 #include <map>
 
+//external
+#include "imgui.h"
+
 //browser
 #include "configfile.hpp"
 #include "stringutils.hpp"
@@ -167,7 +170,7 @@ namespace Files
 
 			if (key == "gui_fontScale")
 			{
-				//ImGui::GetIO().FontGlobalScale = stof(value);
+				ImGui::GetIO().FontGlobalScale = stof(value);
 			}
 		}
 		else

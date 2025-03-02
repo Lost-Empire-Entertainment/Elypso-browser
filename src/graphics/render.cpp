@@ -105,6 +105,8 @@ namespace Graphics
 		}
 
 		cout << "GLAD initialized successfully!\n\n";
+
+		GUI_Browser::Initialize();
 	}
 
 	void Render::UpdateAfterRescale(GLFWwindow* window, int width, int height)
