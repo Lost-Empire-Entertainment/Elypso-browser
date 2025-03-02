@@ -29,7 +29,7 @@ Lost Empire Entertainment does not own, did not create, does not actively develo
 | Library         | License     | Purpose |
 |----------------|------------|---------|
 | **Lexbor**     | Apache 2.0  | HTML parsing and rendering |
-| **DukTape**    | MIT         | Lightweight JavaScript engine |
+| none           | -           | Lightweight JavaScript engine |
 
 ## Networking & Communication
 | Library           | License      | Purpose |
