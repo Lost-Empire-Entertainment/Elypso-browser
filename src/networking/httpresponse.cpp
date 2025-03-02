@@ -8,5 +8,19 @@
 
 namespace Networking
 {
+	HTTPResponse::HTTPResponse(
+		int statusCode, 
+		const string& body) :
+		statusCode(statusCode),
+		body(body) {}
 
+	int HTTPResponse::GetStatusCode() const
+	{
+		return statusCode;
+	}
+
+	string HTTPResponse::GetBody() const
+	{
+		return body;
+	}
 }

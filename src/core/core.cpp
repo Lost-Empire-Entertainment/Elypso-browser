@@ -22,10 +22,12 @@
 #include "configfile.hpp"
 #include "gui.hpp"
 #include "render.hpp"
+#include "networkmanager.hpp"
 
 using Files::ConfigFile;
 using Graphics::Render;
 using GUI::GUI_Browser;
+using Networking::NetworkManager;
 
 using std::cout;
 using std::wstring;
@@ -141,6 +143,13 @@ namespace Core
 		ConfigFile::LoadConfigFile();
 
 		Render::Initialize();
+
+		bool hasInternet = NetworkManager::HasInternet();
+		string internetCheckResult = hasInternet
+			? "User has internet!" 
+			: "Error: No internet detected!";
+
+		cout << internetCheckResult << "\n";
 	}
 
 	void Browser::CreateErrorPopup(const char* errorMessage)

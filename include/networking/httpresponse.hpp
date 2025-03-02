@@ -5,10 +5,21 @@
 
 #pragma once
 
+#include <string>
+
 namespace Networking
 {
+	using std::string;
+
 	class HTTPResponse
 	{
+	public:
+		HTTPResponse(int statusCode, const string& body);
 
+		int GetStatusCode() const;
+		string GetBody() const;
+	private:
+		int statusCode;
+		string body;
 	};
 }

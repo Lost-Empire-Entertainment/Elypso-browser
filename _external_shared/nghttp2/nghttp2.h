@@ -53,7 +53,7 @@ extern "C" {
 #include <stdarg.h>
 #include <stddef.h>
 
-#include <nghttp2/nghttp2ver.h>
+#include <nghttp2ver.h>
 
 #ifdef NGHTTP2_STATICLIB
 #  define NGHTTP2_EXTERN

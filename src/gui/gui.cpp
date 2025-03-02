@@ -18,11 +18,13 @@
 #include "configfile.hpp"
 #include "fileutils.hpp"
 #include "render.hpp"
+#include "networkmanager.hpp"
 
 using Core::Browser;
 using Files::ConfigFile;
 using Utils::File;
 using Graphics::Render;
+using Networking::NetworkManager;
 
 using std::filesystem::exists;
 using std::filesystem::path;
@@ -251,8 +253,8 @@ namespace GUI
 		int fbWidth, fbHeight;
 		glfwGetFramebufferSize(Render::window, &fbWidth, &fbHeight);
 
-		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-		ImGui::SetNextWindowSize(ImVec2(fbWidth, 100.0f), ImGuiCond_Always);
+		ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f));
+		ImGui::SetNextWindowSize(ImVec2(fbWidth, 130.0f), ImGuiCond_Always);
 
 		if (ImGui::Begin("TopWindow", NULL, windowFlags))
 		{
@@ -260,6 +262,7 @@ namespace GUI
 			{
 				websiteString = string(websiteChar);
 				cout << "website is '" << websiteString << "'!\n";
+				NetworkManager::ParseURL(websiteString);
 			}
 
 			ImGui::End();
@@ -278,8 +281,8 @@ namespace GUI
 		int fbWidth, fbHeight;
 		glfwGetFramebufferSize(Render::window, &fbWidth, &fbHeight);
 
-		ImGui::SetNextWindowPos(ImVec2(0.0f, 100.0f));
-		ImGui::SetNextWindowSize(ImVec2(fbWidth, fbHeight - 100.0f), ImGuiCond_Always);
+		ImGui::SetNextWindowPos(ImVec2(0.0f, 130.0f));
+		ImGui::SetNextWindowSize(ImVec2(fbWidth, fbHeight - 130.0f), ImGuiCond_Always);
 
 		if (ImGui::Begin("MainWindow", NULL, windowFlags))
 		{

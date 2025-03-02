@@ -5,11 +5,17 @@
 
 #pragma once
 
+#include <string>
+
 namespace Networking
 {
+	using std::string;
+
 	class NetworkManager
 	{
 	public:
+		static bool HasInternet();
 
+		static void ParseURL(const string& URL);
 	};
 }
