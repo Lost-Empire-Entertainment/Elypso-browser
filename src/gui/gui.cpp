@@ -254,14 +254,14 @@ namespace GUI
 		glfwGetFramebufferSize(Render::window, &fbWidth, &fbHeight);
 
 		ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f));
-		ImGui::SetNextWindowSize(ImVec2(fbWidth, 130.0f), ImGuiCond_Always);
+		ImGui::SetNextWindowSize(ImVec2(fbWidth, 80.0f), ImGuiCond_Always);
 
 		if (ImGui::Begin("TopWindow", NULL, windowFlags))
 		{
 			if (ImGui::InputText("##websiteSearch", websiteChar, bufferSize, ImGuiInputTextFlags_EnterReturnsTrue))
 			{
 				websiteString = string(websiteChar);
-				cout << "website is '" << websiteString << "'!\n";
+				cout << "Searching for '" << websiteString << "'!\n";
 				NetworkManager::ParseURL(websiteString);
 			}
 
@@ -281,8 +281,8 @@ namespace GUI
 		int fbWidth, fbHeight;
 		glfwGetFramebufferSize(Render::window, &fbWidth, &fbHeight);
 
-		ImGui::SetNextWindowPos(ImVec2(0.0f, 130.0f));
-		ImGui::SetNextWindowSize(ImVec2(fbWidth, fbHeight - 130.0f), ImGuiCond_Always);
+		ImGui::SetNextWindowPos(ImVec2(0.0f, 110.0f));
+		ImGui::SetNextWindowSize(ImVec2(fbWidth, fbHeight - 110.0f), ImGuiCond_Always);
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		if (ImGui::Begin("MainWindow", NULL, windowFlags))

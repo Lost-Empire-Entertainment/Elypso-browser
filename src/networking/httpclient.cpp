@@ -48,6 +48,7 @@ namespace Networking
 		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCode);
 
 		curl_easy_cleanup(curl);
+
 		return HTTPResponse(responseCode, responseData);
 	}
 

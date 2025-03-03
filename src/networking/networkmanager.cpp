@@ -17,6 +17,7 @@
 #include "httpclient.hpp"
 #include "httpresponse.hpp"
 #include "core.hpp"
+#include "htmlparser.hpp"
 
 using Core::Browser;
 
@@ -121,6 +122,7 @@ namespace Networking
 		HTTPResponse response = client.SendRequest(request);
 
 		cout << "HTTP Status: " << response.GetStatusCode() << "\n";
-		cout << "Response body (preview): " << response.GetBody().substr(0, 500) << "...\n";
+
+		HTMLParser::ParseHTML(response.GetBody());
 	}
 }
