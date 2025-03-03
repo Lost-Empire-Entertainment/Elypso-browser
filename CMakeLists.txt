@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.29.5)
+﻿cmake_minimum_required(VERSION 3.29.2)
 
 # Ensure install path is set correctly
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -28,7 +28,7 @@ project("Elypso Browser" VERSION ${PROJECT_VERSION})
 
 # Set runtime library type for MSVC
 if (MSVC)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "MSVC Runtime" FORCE)
 endif()
 
 # Paths to frequently used directories
@@ -63,91 +63,69 @@ add_library(glad STATIC ${EXT_GLAD_DIR}/glad.c)
 target_include_directories(glad PUBLIC ${EXT_GLAD_DIR}/..)
 
 # Add GLFW
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(GLFW_LIBRARY_PATH "${EXT_GLFW_DIR}/release/glfw3dll.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(GLFW_LIBRARY_PATH "${EXT_GLFW_DIR}/debug/glfw3dll.lib")
-endif()
+set(GLFW_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_GLFW_DIR}/debug/glfw3dll.lib" , 
+    "${EXT_GLFW_DIR}/release/glfw3dll.lib" > )
 # Add Brotli
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(BROTLI_LIBRARY1_PATH "${EXT_BROTLI_DIR}/release/brotlicommon.lib")
-	set(BROTLI_LIBRARY2_PATH "${EXT_BROTLI_DIR}/release/brotlidec.lib")
-	set(BROTLI_LIBRARY3_PATH "${EXT_BROTLI_DIR}/release/brotlienc.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(BROTLI_LIBRARY1_PATH "${EXT_BROTLI_DIR}/debug/brotlicommon.lib")
-	set(BROTLI_LIBRARY2_PATH "${EXT_BROTLI_DIR}/release/brotlidec.lib")
-	set(BROTLI_LIBRARY3_PATH "${EXT_BROTLI_DIR}/release/brotlienc.lib")
-endif()
+set(BROTLI_LIBRARY1_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_BROTLI_DIR}/debug/brotlicommon.lib" , 
+    "${EXT_BROTLI_DIR}/release/brotlicommon.lib" > )
+set(BROTLI_LIBRARY2_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_BROTLI_DIR}/debug/brotlidec.lib" , 
+    "${EXT_BROTLI_DIR}/release/brotlidec.lib" > )
+set(BROTLI_LIBRARY3_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_BROTLI_DIR}/debug/brotlienc.lib" , 
+    "${EXT_BROTLI_DIR}/release/brotlienc.lib" > )
 # Add FreeType
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(FREETYPE_LIBRARY_PATH "${EXT_FREETYPE_DIR}/release/freetype.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(FREETYPE_LIBRARY_PATH "${EXT_FREETYPE_DIR}/debug/freetyped.lib")
-endif()
+set(FREETYPE_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_FREETYPE_DIR}/debug/freetyped.lib" , 
+    "${EXT_FREETYPE_DIR}/release/freetype.lib" > )
 # Add HarfBuzz
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(HARFBUZZ_LIBRARY1_PATH "${EXT_HARFBUZZ_DIR}/release/harfbuzz.lib")
-	set(HARFBUZZ_LIBRARY2_PATH "${EXT_HARFBUZZ_DIR}/release/harfbuzz-subset.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(HARFBUZZ_LIBRARY1_PATH "${EXT_HARFBUZZ_DIR}/debug/harfbuzz.lib")
-	set(HARFBUZZ_LIBRARY2_PATH "${EXT_HARFBUZZ_DIR}/release/harfbuzz-subset.lib")
-endif()
+set(HARFBUZZ_LIBRARY1_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_HARFBUZZ_DIR}/debug/harfbuzz.lib" , 
+    "${EXT_HARFBUZZ_DIR}/release/harfbuzz.lib" > )
+set(HARFBUZZ_LIBRARY2_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_HARFBUZZ_DIR}/debug/harfbuzz-subset.lib" , 
+    "${EXT_HARFBUZZ_DIR}/release/harfbuzz-subset.lib" > )
 # Add Lexbor
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(LEXBOR_LIBRARY_PATH "${EXT_LEXBOR_DIR}/release/lexbor.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(LEXBOR_LIBRARY_PATH "${EXT_LEXBOR_DIR}/debug/lexbor.lib")
-endif()
+set(LEXBOR_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_LEXBOR_DIR}/debug/lexbor.lib" , 
+    "${EXT_LEXBOR_DIR}/release/lexbor.lib" > )
 # Add LibCurl
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(LIBCURL_LIBRARY_PATH "${EXT_LIBCURL_DIR}/release/libcurl_imp.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(LIBCURL_LIBRARY_PATH "${EXT_LIBCURL_DIR}/debug/libcurl-d_imp.lib")
-endif()
+set(LIBCURL_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_LIBCURL_DIR}/debug/libcurl-d_imp.lib" , 
+    "${EXT_LIBCURL_DIR}/release/libcurl_imp.lib" > )
 # Add LibDataChannel
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(LIBDATACHANNEL_LIBRARY_PATH "${EXT_LIBDATACHANNEL_DIR}/release/datachannel.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(LIBDATACHANNEL_LIBRARY_PATH "${EXT_LIBDATACHANNEL_DIR}/debug/datachannel.lib")
-endif()
+set(LIBDATACHANNEL_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_LIBDATACHANNEL_DIR}/debug/datachannel.lib" , 
+    "${EXT_LIBDATACHANNEL_DIR}/release/datachannel.lib" > )
 # Add LibPSL
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(LIBPSL_LIBRARY_PATH "${EXT_LIBPSL_DIR}/release/psl.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(LIBPSL_LIBRARY_PATH "${EXT_LIBPSL_DIR}/debug/psl.lib")
-endif()
+set(LIBPSL_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_LIBPSL_DIR}/debug/psl.lib" , 
+    "${EXT_LIBPSL_DIR}/release/psl.lib" > )
 # Add LibWebSockets
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(LIBWEBSOCKETS_LIBRARY_PATH "${EXT_LIBWEBSOCKETS_DIR}/release/websockets.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(LIBWEBSOCKETS_LIBRARY_PATH "${EXT_LIBWEBSOCKETS_DIR}/debug/websockets.lib")
-endif()
+set(LIBWEBSOCKETS_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_LIBWEBSOCKETS_DIR}/debug/websockets.lib" , 
+    "${EXT_LIBWEBSOCKETS_DIR}/release/websockets.lib" > )
 # Add NGHTTP2
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(NGHTTP2_LIBRARY_PATH "${EXT_NGHTTP2_DIR}/release/nghttp2.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(NGHTTP2_LIBRARY_PATH "${EXT_NGHTTP2_DIR}/debug/nghttp2.lib")
-endif()
+set(NGHTTP2_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_NGHTTP2_DIR}/debug/nghttp2.lib" , 
+    "${EXT_NGHTTP2_DIR}/release/nghttp2.lib" > )
 # Add OpenSSL
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(OPENSSL_LIBRARY1_PATH "${EXT_OPENSSL_DIR}/release/libcrypto.lib")
-	set(OPENSSL_LIBRARY2_PATH "${EXT_OPENSSL_DIR}/release/libssl.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(OPENSSL_LIBRARY1_PATH "${EXT_OPENSSL_DIR}/release/libcrypto.lib")
-	set(OPENSSL_LIBRARY2_PATH "${EXT_OPENSSL_DIR}/release/libssl.lib")
-endif()
+set(OPENSSL_LIBRARY1_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_OPENSSL_DIR}/debug/libcrypto.lib" , 
+    "${EXT_OPENSSL_DIR}/release/libcrypto.lib" > )
+set(OPENSSL_LIBRARY2_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_OPENSSL_DIR}/debug/libssl.lib" , 
+    "${EXT_OPENSSL_DIR}/release/libssl.lib" > )
 # Add SQLite
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(SQLITE_LIBRARY_PATH "${EXT_SQLITE_DIR}/release/sqlite3.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(SQLITE_LIBRARY_PATH "${EXT_SQLITE_DIR}/debug/sqlite3.lib")
-endif()
+set(SQLITE_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_SQLITE_DIR}/debug/sqlite3.lib" , 
+    "${EXT_SQLITE_DIR}/release/sqlite3.lib" > )
 # Add Zstd
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(ZSTD_LIBRARY_PATH "${EXT_ZSTD_DIR}/release/zstd.lib")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(ZSTD_LIBRARY_PATH "${EXT_ZSTD_DIR}/debug/zstd.lib")
-endif()
+set(ZSTD_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
+    "${EXT_ZSTD_DIR}/debug/zstd.lib" , 
+    "${EXT_ZSTD_DIR}/release/zstd.lib" > )
 
 # Group external libraries
 add_library(external_libs INTERFACE)
@@ -251,23 +229,38 @@ add_custom_command(TARGET ElypsoBrowser POST_BUILD
 )
 
 # Copy all DLLs to the install directory after build
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(DLL_ORIGIN_DIR "${CMAKE_SOURCE_DIR}/files/external dlls/release")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(DLL_ORIGIN_DIR "${CMAKE_SOURCE_DIR}/files/external dlls/debug")
+if(NOT CMAKE_CONFIGURATION_TYPES)  # This is for single-config generators (like Ninja, Makefiles)
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(DLL_ORIGIN_DIR "${CMAKE_SOURCE_DIR}/files/external dlls/release")
+    elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(DLL_ORIGIN_DIR "${CMAKE_SOURCE_DIR}/files/external dlls/debug")
+    endif()
+else()  # Multi-config generators (like Visual Studio, Xcode)
+    set(DLL_ORIGIN_DIR "$<IF:$<CONFIG:Debug>,${CMAKE_SOURCE_DIR}/files/external dlls/debug,${CMAKE_SOURCE_DIR}/files/external dlls/release>")
 endif()
+
 set(DLL_TARGET_DIR "$<TARGET_FILE_DIR:ElypsoBrowser>")
 
-file(GLOB DLL_FILES "${DLL_ORIGIN_DIR}/*")
-	
-foreach(DLL_FILE ${DLL_FILES})
-    get_filename_component(DLL_NAME ${DLL_FILE} NAME)
+# Find all DLL files at configure time (works for single-config generators)
+if(NOT CMAKE_CONFIGURATION_TYPES)
+    file(GLOB DLL_FILES "${DLL_ORIGIN_DIR}/*.dll")
+
+    foreach(DLL_FILE ${DLL_FILES})
+        get_filename_component(DLL_NAME ${DLL_FILE} NAME)
+        add_custom_command(TARGET ElypsoBrowser POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy 
+                "${DLL_FILE}" 
+                "${DLL_TARGET_DIR}/${DLL_NAME}"
+        )
+    endforeach()
+else()
+    # Multi-config generators: Copy DLLs at build time using generator expressions
     add_custom_command(TARGET ElypsoBrowser POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy 
-            ${DLL_FILE} 
-            ${DLL_TARGET_DIR}/${DLL_NAME}
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${DLL_ORIGIN_DIR}"
+            "${DLL_TARGET_DIR}"
     )
-endforeach()
+endif()
 
 set(COPY_TARGETS LICENSE.md EULA.md README.md SECURITY.md LIBRARIES.md)
 foreach(FILE ${COPY_TARGETS})
