@@ -1,4 +1,4 @@
-//Copyright(C) 2025 Lost Empire Entertainment
+﻿//Copyright(C) 2025 Lost Empire Entertainment
 //This program comes with ABSOLUTELY NO WARRANTY.
 //This is free software, and you are welcome to redistribute it under certain conditions.
 //Read LICENSE.md for more information.
@@ -300,28 +300,67 @@ namespace GUI
 
 	void GUI_Browser::RenderBrowserMainWindowContent()
 	{
+		bool previousWasHeading = false;
+		bool isInsideSection = false;
+
 		for (const auto& element : HTMLParser::parsedElements)
 		{
+			if (element.tag == "h1" 
+				|| element.tag == "h2")
+			{
+				if (isInsideSection)
+				{
+					ImGui::Separator();  //separate sections visually
+				}
+				isInsideSection = true;
+			}
+
 			if (element.tag == "h1")
 			{
-				//use a larger font for H1
-				ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
-				ImGui::Text("%s", element.text.c_str());
-				ImGui::PopFont();
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f)); //white
+				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 12));
+
+				ImGui::TextUnformatted(element.text.c_str()); //bold
+
+				ImGui::PopStyleColor();
+				ImGui::PopStyleVar();
+				ImGui::Spacing();
+				previousWasHeading = true;
+			}
+			else if (element.tag == "h2")
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.8f, 0.8f, 0.8f, 1.0f)); //light gray
+				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 8));
+
+				ImGui::TextUnformatted(element.text.c_str()); //slightly smaller but still bold
+
+				ImGui::PopStyleColor();
+				ImGui::PopStyleVar();
+				ImGui::Spacing();
+				previousWasHeading = true;
 			}
 			else if (element.tag == "p")
 			{
 				//wrapped text for paragraphs
 				ImGui::TextWrapped("%s", element.text.c_str());
+				ImGui::Spacing();
+				previousWasHeading = false;
 			}
 			else if (element.tag == "a")
 			{
-				if (ImGui::Button(element.text.c_str()))
+				ImGui::TextColored(ImVec4(0.2f, 0.5f, 1.0f, 1.0f), "%s", element.text.c_str());
+				if (ImGui::IsItemClicked())
 				{
 					cout << "Clicked link: " << element.text << "\n";
 				}
+				ImGui::Spacing();
+				previousWasHeading = false;
 			}
-			ImGui::Separator();
+
+			if (previousWasHeading)
+			{
+				ImGui::Separator();
+			}
 		}
 	}
 

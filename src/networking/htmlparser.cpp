@@ -66,6 +66,7 @@ namespace Networking
 
 					//store tag type for styling
 					if (tag_id == LXB_TAG_H1) htmlElement.tag = "h1";
+					else if (tag_id == LXB_TAG_H2) htmlElement.tag = "h2";
 					else if (tag_id == LXB_TAG_P) htmlElement.tag = "p";
 					else if (tag_id == LXB_TAG_A) htmlElement.tag = "a";
 

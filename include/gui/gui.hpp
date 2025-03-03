@@ -30,9 +30,6 @@ namespace GUI
 		static inline char websiteChar[bufferSize];
 		static inline string websiteString;
 
-		static inline int framebufferWidth = 1280;
-		static inline int framebufferHeight = 720;
-
 		static void SetStyle();
 
 		static void RenderTopBar();
