@@ -5,9 +5,6 @@
 
 #include <iostream>
 
-//external
-#include "Lexbor/html/parser.h"
-
 //browser
 #include "htmlparser.hpp"
 
@@ -37,40 +34,49 @@ namespace Networking
 		}
 
 		cout << "HTML parsed successfully!\n";
+		parsedElements.clear();
 
-		lxb_html_head_element_t* head_element = lxb_html_document_head_element(document);
-		lxb_dom_element_t* head = lxb_dom_interface_element(head_element);
-		if (!head)
-		{
-			cout << "Error: No <head> found in document!\n";
-			lxb_html_document_destroy(document);
-			return;
-		}
-
-		//loop through <head> children to find <title>
-		lxb_dom_node_t* node = lxb_dom_interface_node(head)->first_child;
-		while (node)
-		{
-			//check if node is a <title> tag
-			if (lxb_dom_interface_element(node) != nullptr)
-			{
-				//get tag ID and check if it's <title>
-				if (lxb_dom_element_tag_id(lxb_dom_interface_element(node)) == LXB_TAG_TITLE)
-				{
-					//get the text content of <title>
-					lxb_char_t* text = lxb_dom_node_text_content(node, NULL);
-					if (text)
-					{
-						cout << "Page title: " << text << "\n";
-					}
-					break;
-				}
-			}
-			node = node->next;
-		}
+		//start extracting from <body>
+		lxb_html_body_element_t* body_element = lxb_html_document_body_element(document);
+		lxb_dom_element_t* body = lxb_dom_interface_element(body_element);
+		if (body) ExtractText(lxb_dom_interface_node(body));
 
 		lxb_html_document_destroy(document);
 
 		cout << "Finished HTML head search.\n";
+	}
+
+	void HTMLParser::ExtractText(lxb_dom_node_t* root)
+	{
+		lxb_dom_node_t* node = root->first_child;
+
+		while (node)
+		{
+			if (node->type == LXB_DOM_NODE_TYPE_ELEMENT)
+			{
+				lxb_dom_element_t* element = lxb_dom_interface_element(node);
+				lxb_tag_id_t tag_id = lxb_dom_element_tag_id(element);
+
+				//extract text content
+				lxb_char_t* text = lxb_dom_node_text_content(node, NULL);
+				if (text)
+				{
+					HTMLElement htmlElement;
+					htmlElement.text = (char*)text;
+
+					//store tag type for styling
+					if (tag_id == LXB_TAG_H1) htmlElement.tag = "h1";
+					else if (tag_id == LXB_TAG_P) htmlElement.tag = "p";
+					else if (tag_id == LXB_TAG_A) htmlElement.tag = "a";
+
+					if (!htmlElement.text.empty())
+					{
+						parsedElements.push_back(htmlElement);
+					}
+				}
+			}
+			ExtractText(node); //recursive call to find nested elements
+			node = node->next;
+		}
 	}
 }

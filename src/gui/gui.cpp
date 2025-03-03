@@ -19,12 +19,14 @@
 #include "fileutils.hpp"
 #include "render.hpp"
 #include "networkmanager.hpp"
+#include "htmlparser.hpp"
 
 using Core::Browser;
 using Files::ConfigFile;
 using Utils::File;
 using Graphics::Render;
 using Networking::NetworkManager;
+using Networking::HTMLParser;
 
 using std::filesystem::exists;
 using std::filesystem::path;
@@ -285,57 +287,42 @@ namespace GUI
 		ImGui::SetNextWindowSize(ImVec2(fbWidth, fbHeight - 110.0f), ImGuiCond_Always);
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+
 		if (ImGui::Begin("MainWindow", NULL, windowFlags))
 		{
-			ImVec2 contentRegionMin = ImGui::GetWindowContentRegionMin();
-			ImVec2 contentRegionMax = ImGui::GetWindowContentRegionMax();
-			ImVec2 availableSize = ImVec2(
-				contentRegionMax.x - contentRegionMin.x,
-				contentRegionMax.y - contentRegionMin.y);
-
-			ImVec2 renderSize = availableSize;
-
-			renderSize.x = roundf(renderSize.x);
-			renderSize.y = roundf(renderSize.y);
-
-			if (renderSize.x != framebufferWidth
-				|| renderSize.y != framebufferHeight)
-			{
-				framebufferWidth = static_cast<int>(renderSize.x);
-				framebufferHeight = static_cast<int>(renderSize.y);
-
-				glBindTexture(GL_TEXTURE_2D, Render::textureColorbuffer);
-				glTexImage2D(
-					GL_TEXTURE_2D,
-					0,
-					GL_RGB,
-					framebufferWidth,
-					framebufferHeight,
-					0,
-					GL_RGB,
-					GL_UNSIGNED_BYTE,
-					NULL);
-
-				glBindRenderbuffer(GL_RENDERBUFFER, Render::rbo);
-				glRenderbufferStorage(
-					GL_RENDERBUFFER,
-					GL_DEPTH24_STENCIL8,
-					framebufferWidth,
-					framebufferHeight);
-
-				glViewport(0, 0, framebufferWidth, framebufferHeight);
-			}
-
-			//render to imgui image and flip the Y-axis
-			ImGui::Image(
-				(void*)(intptr_t)Render::textureColorbuffer,
-				renderSize,
-				ImVec2(0, 1),
-				ImVec2(1, 0));
+			RenderBrowserMainWindowContent();
 
 			ImGui::End();
 		}
+
 		ImGui::PopStyleVar();
+	}
+
+	void GUI_Browser::RenderBrowserMainWindowContent()
+	{
+		for (const auto& element : HTMLParser::parsedElements)
+		{
+			if (element.tag == "h1")
+			{
+				//use a larger font for H1
+				ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
+				ImGui::Text("%s", element.text.c_str());
+				ImGui::PopFont();
+			}
+			else if (element.tag == "p")
+			{
+				//wrapped text for paragraphs
+				ImGui::TextWrapped("%s", element.text.c_str());
+			}
+			else if (element.tag == "a")
+			{
+				if (ImGui::Button(element.text.c_str()))
+				{
+					cout << "Clicked link: " << element.text << "\n";
+				}
+			}
+			ImGui::Separator();
+		}
 	}
 
 	void GUI_Browser::Shutdown()

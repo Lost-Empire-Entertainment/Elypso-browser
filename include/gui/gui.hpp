@@ -38,5 +38,6 @@ namespace GUI
 		static void RenderTopBar();
 		static void RenderBrowserTopWindow();
 		static void RenderBrowserMainWindow();
+		static void RenderBrowserMainWindowContent();
 	};
 }

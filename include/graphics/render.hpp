@@ -23,17 +23,11 @@ namespace Graphics
 
 		static inline float aspectRatio;
 
-		static inline unsigned int textureColorbuffer;
-		static inline unsigned int rbo;
-
 		static void Initialize();
 
 		static void UpdateAfterRescale(GLFWwindow* window, int width, int height);
 
 		static void WindowLoop();
 	private:
-		static inline unsigned int framebuffer;
-
-		static void FramebufferSetup();
 	};
 }
