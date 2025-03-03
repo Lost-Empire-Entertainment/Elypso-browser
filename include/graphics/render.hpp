@@ -7,18 +7,13 @@
 
 //external
 #include "glfw3.h"
-#include "glm.hpp"
 
 namespace Graphics
 {
-	using glm::vec3;
-
 	class Render
 	{
 	public:
 		static inline GLFWwindow* window;
-
-		static inline vec3 backgroundColor = vec3(0.1f, 0.1f, 0.1f);
 
 		static inline unsigned int currentWidth;
 		static inline unsigned int currentHeight;
@@ -28,10 +23,17 @@ namespace Graphics
 
 		static inline float aspectRatio;
 
+		static inline unsigned int textureColorbuffer;
+		static inline unsigned int rbo;
+
 		static void Initialize();
 
 		static void UpdateAfterRescale(GLFWwindow* window, int width, int height);
 
 		static void WindowLoop();
+	private:
+		static inline unsigned int framebuffer;
+
+		static void FramebufferSetup();
 	};
 }
