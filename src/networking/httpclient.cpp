@@ -43,10 +43,37 @@ namespace Networking
 		//let OpenSSL auto-negotiate TLS version
 		curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_MAX_DEFAULT);
 
+		//add User-Agent
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 11.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0");
+
+		//add Referrer
+		curl_easy_setopt(curl, CURLOPT_REFERER, "https://www.google.com/");
+
+		//enable cookies for session handling
+		curl_easy_setopt(curl, CURLOPT_COOKIEJAR, "cookies.txt");
+		curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "cookies.txt");
+
+		//add custom headers
+		struct curl_slist* headers = NULL;
+		headers = curl_slist_append(headers, "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+		headers = curl_slist_append(headers, "Accept-Language: en-US,en;q=0.9");
+		headers = curl_slist_append(headers, "Connection: keep-alive");
+		headers = curl_slist_append(headers, "Upgrade-Insecure-Requests: 1");
+
+		if (headers) curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+		//let Curl automatically decompress responses
+		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
+
+		//set timeout values
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+		curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5L);
+
 		CURLcode res = curl_easy_perform(curl);
 		long responseCode = 0;
 		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCode);
 
+		if (headers) curl_slist_free_all(headers);
 		curl_easy_cleanup(curl);
 
 		return HTTPResponse(responseCode, responseData);

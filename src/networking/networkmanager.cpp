@@ -53,7 +53,7 @@ namespace Networking
 		//wait 5 seconds
 		curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5L);
 		//basic user agent
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 11.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0");
 
 		//assign curl certification path
 		curl_easy_setopt(curl, CURLOPT_CAINFO, curlCertPath.c_str());
