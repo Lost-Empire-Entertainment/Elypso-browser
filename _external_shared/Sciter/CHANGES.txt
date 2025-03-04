@@ -4,3 +4,5 @@ https://sciter.com/
 Changes:
 - downloaded sciter.js sdk from https://sciter.com/download/
 - copied sciter.dll and sciter-component.dll to release and debug folder (debug is same as release, no debug provided)
+- copied include folder content to root sciter folder
+- deleted all other files

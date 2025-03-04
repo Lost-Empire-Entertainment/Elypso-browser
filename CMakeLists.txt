@@ -57,6 +57,7 @@ set(EXT_NGHTTP2_DIR "${CMAKE_SOURCE_DIR}/_external_shared/NGHTTP2")
 set(EXT_OPENSSL_DIR "${CMAKE_SOURCE_DIR}/_external_shared/OpenSSL")
 set(EXT_SQLITE_DIR "${CMAKE_SOURCE_DIR}/_external_shared/SQLite")
 set(EXT_ZSTD_DIR "${CMAKE_SOURCE_DIR}/_external_shared/Zstd")
+set(EXT_SCITER_DIR "${CMAKE_SOURCE_DIR}/_external_shared/Sciter")
 
 # Add GLAD
 add_library(glad STATIC ${EXT_GLAD_DIR}/glad.c)
@@ -190,6 +191,7 @@ target_include_directories(ElypsoBrowser PRIVATE
 	${EXT_OPENSSL_DIR}
 	${EXT_SQLITE_DIR}
 	${EXT_ZSTD_DIR}
+	${EXT_SCITER_DIR}
 )
 
 target_link_libraries(ElypsoBrowser PRIVATE 
