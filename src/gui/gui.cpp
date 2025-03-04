@@ -20,6 +20,7 @@
 #include "render.hpp"
 #include "networkmanager.hpp"
 #include "htmlparser.hpp"
+#include "content.hpp"
 
 using Core::Browser;
 using Files::ConfigFile;
@@ -27,6 +28,7 @@ using Utils::File;
 using Graphics::Render;
 using Networking::NetworkManager;
 using Networking::HTMLParser;
+using Graphics::Content;
 
 using std::filesystem::exists;
 using std::filesystem::path;
@@ -290,7 +292,22 @@ namespace GUI
 
 		if (ImGui::Begin("MainWindow", NULL, windowFlags))
 		{
-			RenderBrowserMainWindowContent();
+			ImVec2 pos = ImGui::GetWindowPos();
+			ImVec2 size = ImGui::GetWindowSize();
+
+			if (Content::window)
+			{
+				SetWindowPos(
+					Content::window,
+					HWND_TOP,
+					(int)pos.x,
+					(int)pos.y,
+					(int)size.x,
+					(int)size.y,
+					SWP_NOZORDER);
+			}
+
+			//RenderBrowserMainWindowContent();
 
 			ImGui::End();
 		}

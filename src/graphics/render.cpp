@@ -16,6 +16,7 @@
 #include "core.hpp"
 #include "input.hpp"
 #include "gui.hpp"
+#include "content.hpp"
 
 using Core::Browser;
 using Core::Input;
@@ -84,7 +85,7 @@ namespace Graphics
 
 		glfwSetMouseButtonCallback(window, Input::MouseButtonCallback);
 		glfwSetScrollCallback(window, Input::ScrollCallback);
-		glfwSetKeyCallback(window, Input::KeyCallback);
+		glfwSetKeyCallback(window, Content::ForwardGLFWEvents);
 		glfwSetCursorPosCallback(window, Input::MouseMovementCallback);
 
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* window) { Browser::Shutdown(); });
@@ -107,6 +108,8 @@ namespace Graphics
 		cout << "GLAD initialized successfully!\n\n";
 
 		GUI_Browser::Initialize();
+
+		Content::Initialize();
 	}
 
 	void Render::UpdateAfterRescale(GLFWwindow* window, int width, int height)
