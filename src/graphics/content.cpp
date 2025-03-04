@@ -88,30 +88,23 @@ namespace Graphics
 			WS_CAPTION
 			| WS_MAXIMIZEBOX
 			| WS_SIZEBOX
-			| WS_THICKFRAME);
-		style |= WS_POPUP;
+			| WS_THICKFRAME
+			| WS_POPUP);
 		SetWindowLong(window, GWL_STYLE, style);
 
 		//remove extra styles
 		LONG exStyle = GetWindowLong(window, GWL_EXSTYLE);
-		exStyle &= ~WS_EX_DLGMODALFRAME;
+		exStyle &= ~(
+			WS_EX_DLGMODALFRAME
+			| WS_EX_WINDOWEDGE);
 		SetWindowLong(window, GWL_EXSTYLE, exStyle);
-
-		//prevent user resizing from system events
-		SetWindowLongPtr(
-			window,
-			GWL_STYLE,
-			GetWindowLongPtr(window, GWL_STYLE)
-			& ~WS_SIZEBOX);
-		SetWindowLongPtr(
-			window,
-			GWL_EXSTYLE,
-			GetWindowLongPtr(window, GWL_EXSTYLE)
-			& ~WS_EX_WINDOWEDGE);
 
 		//set parent window
 		HWND glfwWindow = glfwGetWin32Window(Render::window);
 		SetParent(window, glfwWindow);
+
+		//ensure Sciter is visible and always on top
+		ShowWindow(window, SW_SHOW);
 
 		//
 		// LOAD HOMEPAGE
@@ -127,22 +120,6 @@ namespace Graphics
 		else cout << "Successfully found HTML test file!\n";
 		wstring wideHTMLFilePath(HTMLFilePath.begin(), HTMLFilePath.end());
 		SciterLoadFile(window, wideHTMLFilePath.c_str());
-
-		//
-		// FINAL TWEAKS
-		//
-
-		//ensure Sciter is visible and always on top
-		ShowWindow(window, SW_SHOW);
-		RedrawWindow(
-			window, 
-			NULL, 
-			NULL, 
-			RDW_INVALIDATE 
-			| RDW_UPDATENOW);
-
-		//bring Sciter to front but below full-screen apps
-		SetWindowPos(window, HWND_TOP, 0, 0, 800, 600, SWP_SHOWWINDOW);
 	}
 
 	void Content::LoadContent(const wchar_t* path)
