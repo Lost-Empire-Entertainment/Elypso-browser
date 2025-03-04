@@ -201,7 +201,6 @@ namespace GUI
 				ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), dockFlags);
 
 				RenderBrowserTopWindow();
-				RenderBrowserMainWindow();
 
 				ImGui::Render();
 			}
@@ -271,34 +270,6 @@ namespace GUI
 
 			ImGui::End();
 		}
-	}
-
-	void GUI_Browser::RenderBrowserMainWindow()
-	{
-		ImGuiWindowFlags windowFlags =
-			ImGuiWindowFlags_NoCollapse
-			| ImGuiWindowFlags_NoDocking
-			| ImGuiWindowFlags_NoTitleBar
-			| ImGuiWindowFlags_NoResize
-			| ImGuiWindowFlags_NoSavedSettings;
-
-		int fbWidth, fbHeight;
-		glfwGetFramebufferSize(Render::window, &fbWidth, &fbHeight);
-
-		ImGui::SetNextWindowPos(ImVec2(0.0f, 110.0f));
-		ImGui::SetNextWindowSize(ImVec2(fbWidth, fbHeight - 110.0f), ImGuiCond_Always);
-
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-
-		if (ImGui::Begin("MainWindow", NULL, windowFlags))
-		{
-			ImVec2 size = ImGui::GetWindowSize();
-			Content::UpdateContent(size.x, size.y);
-
-			ImGui::End();
-		}
-
-		ImGui::PopStyleVar();
 	}
 
 	void GUI_Browser::Shutdown()

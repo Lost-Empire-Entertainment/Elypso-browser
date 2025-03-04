@@ -10,6 +10,7 @@
 //external
 #include "stb_image.h"
 #include "glad.h"
+#include "glm.hpp"
 
 //browser
 #include "render.hpp"
@@ -130,6 +131,9 @@ namespace Graphics
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		GUI_Browser::Render();
+
+		const vec4& posAndSize = Content::GetPosAndSize();
+		Content::UpdateContent(posAndSize);
 
 		//process Sciter UI events
 		MSG msg{};

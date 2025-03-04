@@ -4,7 +4,6 @@
 //Read LICENSE.md for more information.
 
 #include <iostream>
-#include <string>
 #include <filesystem>
 #include <locale>
 #include <codecvt>
@@ -22,7 +21,6 @@
 using Core::Browser;
 
 using std::cout;
-using std::string;
 using std::filesystem::path;
 using std::filesystem::exists;
 using std::wstring;
@@ -119,10 +117,10 @@ namespace Graphics
 		}
 		else cout << "Successfully found HTML test file!\n";
 		wstring wideHTMLFilePath(HTMLFilePath.begin(), HTMLFilePath.end());
-		LoadContent(wideHTMLFilePath.c_str());
+		LoadHTMLFromFile(wideHTMLFilePath.c_str());
 	}
 
-	void Content::LoadContent(const wchar_t* path)
+	void Content::LoadHTMLFromFile(const wchar_t* path)
 	{
 		int sizeNeeded = WideCharToMultiByte(
 			CP_UTF8,
@@ -158,16 +156,58 @@ namespace Graphics
 		}
 	}
 
-	void Content::UpdateContent(int sizeX, int sizeY)
+	void Content::LoadHTMLFromMemory(const string& html)
+	{
+		//convert the string to Sciter-compatible format
+		LPCBYTE htmlData = (LPCBYTE)html.c_str();
+		UINT dataLength = (UINT)html.length();
+
+		if (!SciterLoadHtml(
+			window,
+			htmlData,
+			dataLength,
+			NULL))
+		{
+			cout << "Failed to load Sciter UI!\n";
+		}
+		else
+		{
+			cout << "Successfully loaded Sciter UI!\n";
+		}
+	}
+
+	vec4 Content::GetPosAndSize()
+	{
+		int fbWidth, fbHeight;
+		glfwGetFramebufferSize(Render::window, &fbWidth, &fbHeight);
+
+		int posX = 0;
+		int posY = 110; //offset to avoid overlapping top imgui window
+		int sizeX = fbWidth;
+		int sizeY = fbHeight - 110; //Sciter fills the remaining area
+
+		return vec4(
+			posX,
+			posY,
+			sizeX,
+			sizeY);
+	}
+
+	void Content::UpdateContent(const vec4& posAndSize)
 	{
 		if (Content::window)
 		{
+			int posX = posAndSize.x;
+			int posY = posAndSize.y;
+			int sizeX = posAndSize.z;
+			int sizeY = posAndSize.w;
+
 			//resize Sciter window to match ImGui
 			SetWindowPos(
 				Content::window,
 				HWND_TOPMOST,
-				0,
-				110,
+				posX,
+				posY,
 				sizeX,
 				sizeY,
 				SWP_NOZORDER
@@ -175,8 +215,11 @@ namespace Graphics
 		}
 	}
 
-	void Content::ForceRedraw(int sizeX, int sizeY)
+	void Content::ForceRedraw(const vec4& posAndSize)
 	{
+		int sizeX = posAndSize.z;
+		int sizeY = posAndSize.w;
+
 		//force Sciter to refresh its layout
 		SendMessage(
 			Content::window,
