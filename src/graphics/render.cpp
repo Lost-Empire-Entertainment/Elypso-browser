@@ -135,14 +135,6 @@ namespace Graphics
 		const vec4& posAndSize = Content::GetPosAndSize();
 		Content::UpdateContent(posAndSize);
 
-		//process Sciter UI events
-		MSG msg{};
-		while (PeekMessage(&msg, Content::window, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
 		//swap the front and back buffers
 		glfwSwapBuffers(window);
 		if (!Browser::IsUserIdle())

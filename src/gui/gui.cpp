@@ -5,6 +5,7 @@
 
 #include <filesystem>
 #include <iostream>
+#include <thread>
 
 //external
 #include "imgui_impl_glfw.h"
@@ -33,6 +34,8 @@ using Graphics::Content;
 using std::filesystem::exists;
 using std::filesystem::path;
 using std::cout;
+
+using std::thread;
 
 namespace GUI
 {
@@ -265,7 +268,8 @@ namespace GUI
 			{
 				websiteString = string(websiteChar);
 				cout << "Searching for '" << websiteString << "'!\n";
-				NetworkManager::ParseURL(websiteString);
+				thread t(NetworkManager::ParseURL, websiteString);
+				t.detach();
 			}
 
 			ImGui::End();

@@ -3,6 +3,9 @@
 //This is free software, and you are welcome to redistribute it under certain conditions.
 //Read LICENSE.md for more information.
 
+//Used for sending parsed HTML data from worker thread to main thread
+#define WM_LOAD_HTML (WM_APP + 1)
+
 #pragma once
 
 #include <string>
@@ -53,5 +56,21 @@ namespace Graphics
 		/// Force-redraws Sciter window content, only necessary in rare cases.
 		/// </summary>
 		static void ForceRedraw(const vec4& posAndSize);
+	private:
+		/// <summary>
+		/// Handle loading websites from another thread
+		/// </summary>
+		static LRESULT CALLBACK WndProc(
+			HWND hWnd, 
+			UINT msg, 
+			WPARAM wParam, 
+			LPARAM lParam);
+
+		static VOID SC_CALLBACK SciterDebugCallback(
+			LPVOID param,
+			UINT subSystem,
+			UINT severity,
+			LPCWSTR text,
+			UINT textLength);
 	};
 }

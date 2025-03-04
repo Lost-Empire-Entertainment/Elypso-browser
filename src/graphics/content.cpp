@@ -104,6 +104,12 @@ namespace Graphics
 		//ensure Sciter is visible and always on top
 		ShowWindow(window, SW_SHOW);
 
+		//displays sciter debug output in console
+		SciterSetupDebugOutput(
+			window, 
+			nullptr, 
+			&SciterDebugCallback);
+
 		//
 		// LOAD HOMEPAGE
 		//
@@ -122,6 +128,8 @@ namespace Graphics
 
 	void Content::LoadHTMLFromFile(const wchar_t* path)
 	{
+		cout << "Started loading HTML from file...\n";
+
 		int sizeNeeded = WideCharToMultiByte(
 			CP_UTF8,
 			0,
@@ -148,16 +156,15 @@ namespace Graphics
 
 		if (!SciterLoadFile(window, path))
 		{
-			cout << "Failed to load Sciter UI: '" << pathStr << "'!\n";
+			cout << "Error: Failed to load Sciter from HTML file: '" << pathStr << "'!\n";
 		}
-		else
-		{
-			cout << "Sciter UI loaded: '" << pathStr << "'!\n";
-		}
+		else cout << "Successfully loaded Sciter from HTML file!\n";
 	}
 
 	void Content::LoadHTMLFromMemory(const string& html)
 	{
+		cout << "Started loading HTML from memory...\n";
+
 		//convert the string to Sciter-compatible format
 		LPCBYTE htmlData = (LPCBYTE)html.c_str();
 		UINT dataLength = (UINT)html.length();
@@ -168,12 +175,9 @@ namespace Graphics
 			dataLength,
 			NULL))
 		{
-			cout << "Failed to load Sciter UI!\n";
+			cout << "Error: Failed to load Sciter from memory!\n";
 		}
-		else
-		{
-			cout << "Successfully loaded Sciter UI!\n";
-		}
+		else cout << "Successfully loaded Sciter from memory!\n";
 	}
 
 	vec4 Content::GetPosAndSize()
@@ -211,6 +215,7 @@ namespace Graphics
 				sizeX,
 				sizeY,
 				SWP_NOZORDER
+				| SWP_NOACTIVATE
 				| SWP_SHOWWINDOW);
 		}
 	}
@@ -234,5 +239,71 @@ namespace Graphics
 			NULL,
 			RDW_INVALIDATE
 			| RDW_UPDATENOW);
+	}
+
+	LRESULT CALLBACK Content::WndProc(
+		HWND hWnd,
+		UINT msg,
+		WPARAM wParam,
+		LPARAM lParam)
+	{
+		if (msg == WM_LOAD_HTML)
+		{
+			string* html = reinterpret_cast<string*>(lParam);
+			LoadHTMLFromMemory(*html);
+			delete html;
+			return 0;
+		}
+		return DefWindowProc(hWnd, msg, wParam, lParam);
+	}
+
+	VOID SC_CALLBACK Content::SciterDebugCallback(
+		LPVOID param,
+		UINT subSystem,
+		UINT severity,
+		LPCWSTR text,
+		UINT textLength)
+	{
+		wstring wtext(text, textLength);
+		
+		int sizeRequired = WideCharToMultiByte(
+			CP_UTF8,
+			0,
+			wtext.data(),
+			static_cast<int>(wtext.size()),
+			nullptr,
+			0,
+			nullptr,
+			nullptr);
+
+		string message(sizeRequired, 0);
+		WideCharToMultiByte(
+			CP_UTF8,
+			0,
+			wtext.data(),
+			static_cast<int>(wtext.size()),
+			&message[0],
+			sizeRequired,
+			nullptr,
+			nullptr);
+
+		string severityString{};
+		switch (severity)
+		{
+		case 0:
+			severityString = "INFO";
+			break;
+		case 1:
+			severityString = "WARNING";
+			break;
+		case 2:
+			severityString = "ERROR";
+			break;
+		default:
+			severityString = "UNKNOWN";
+			break;
+		}
+
+		cout << "[" << severityString << "] [SCITER] " << message;
 	}
 }

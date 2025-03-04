@@ -38,11 +38,16 @@ namespace Networking
 
 		cout << "HTML parsed successfully!\n";
 
-		//send the html data to Sciter
+		//send the html data to the main thread
+		string* htmlCopy = new string(html);
+		PostMessage(
+			Content::window, 
+			WM_LOAD_HTML,
+			0,
+			reinterpret_cast<LPARAM>(htmlCopy));
+
 		Content::LoadHTMLFromMemory(html);
 
 		lxb_html_document_destroy(document);
-
-		cout << "Finished HTML head search.\n";
 	}
 }
