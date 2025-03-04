@@ -5,11 +5,18 @@
 
 #include <iostream>
 
+//external
+#include "glfw3.h"
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include "glfw3native.h"
+
 //browser
 #include "htmlparser.hpp"
 #include "content.hpp"
+#include "render.hpp"
 
 using Graphics::Content;
+using Graphics::Render;
 
 using std::cout;
 
@@ -41,12 +48,10 @@ namespace Networking
 		//send the html data to the main thread
 		string* htmlCopy = new string(html);
 		PostMessage(
-			Content::window, 
-			WM_LOAD_HTML,
-			0,
+			glfwGetWin32Window(Render::window),
+			WM_LOAD_HTML, 
+			0, 
 			reinterpret_cast<LPARAM>(htmlCopy));
-
-		Content::LoadHTMLFromMemory(html);
 
 		lxb_html_document_destroy(document);
 	}

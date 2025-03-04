@@ -29,6 +29,11 @@ namespace Graphics
 		static inline HWINDOW window;
 
 		/// <summary>
+		/// Original window procedure
+		/// </summary>
+		static inline WNDPROC originalWndProc;
+
+		/// <summary>
 		/// Initialize Sciter
 		/// </summary>
 		static void Initialize();
@@ -57,6 +62,8 @@ namespace Graphics
 		/// </summary>
 		static void ForceRedraw(const vec4& posAndSize);
 	private:
+		static void SubclassGLFWWindow();
+
 		/// <summary>
 		/// Handle loading websites from another thread
 		/// </summary>
@@ -66,6 +73,9 @@ namespace Graphics
 			WPARAM wParam, 
 			LPARAM lParam);
 
+		/// <summary>
+		/// Send Sciter debug messages to console
+		/// </summary>
 		static VOID SC_CALLBACK SciterDebugCallback(
 			LPVOID param,
 			UINT subSystem,

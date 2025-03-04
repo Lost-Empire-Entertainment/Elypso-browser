@@ -110,6 +110,8 @@ namespace Graphics
 			nullptr, 
 			&SciterDebugCallback);
 
+		SubclassGLFWWindow();
+
 		//
 		// LOAD HOMEPAGE
 		//
@@ -164,6 +166,18 @@ namespace Graphics
 	void Content::LoadHTMLFromMemory(const string& html)
 	{
 		cout << "Started loading HTML from memory...\n";
+
+		if (!window)
+		{
+			cout << "Error: Invalid Sciter window handle!\n";
+			return;
+		}
+
+		if (html.empty())
+		{
+			cout << "Error: Empty HTML string!\n";
+			return;
+		}
 
 		//convert the string to Sciter-compatible format
 		LPCBYTE htmlData = (LPCBYTE)html.c_str();
@@ -241,6 +255,24 @@ namespace Graphics
 			| RDW_UPDATENOW);
 	}
 
+	void Content::SubclassGLFWWindow()
+	{
+		HWND glfwHwnd = glfwGetWin32Window(Render::window);
+		if (glfwHwnd)
+		{
+			originalWndProc = reinterpret_cast<WNDPROC>(
+				SetWindowLongPtr(
+				glfwHwnd,
+				GWLP_WNDPROC,
+				reinterpret_cast<LONG_PTR>(WndProc)));
+
+			if (originalWndProc == nullptr)
+			{
+				cout << "Error: Failed to subclass window procedure!\n";
+			}
+		}
+	}
+
 	LRESULT CALLBACK Content::WndProc(
 		HWND hWnd,
 		UINT msg,
@@ -249,12 +281,19 @@ namespace Graphics
 	{
 		if (msg == WM_LOAD_HTML)
 		{
+			cout << "WM_LOAD_HTML\n";
+
 			string* html = reinterpret_cast<string*>(lParam);
 			LoadHTMLFromMemory(*html);
 			delete html;
 			return 0;
 		}
-		return DefWindowProc(hWnd, msg, wParam, lParam);
+		return CallWindowProc(
+			originalWndProc, 
+			hWnd, 
+			msg,
+			wParam, 
+			lParam);
 	}
 
 	VOID SC_CALLBACK Content::SciterDebugCallback(
