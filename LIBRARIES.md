@@ -29,7 +29,7 @@ Lost Empire Entertainment does not own, did not create, does not actively develo
 | Library         | License     | Purpose |
 |----------------|------------|---------|
 | **Lexbor**     | Apache 2.0  | HTML parsing and rendering |
-| none           | -           | JavaScript engine |
+| **Sciter**     | BSD 3-Clause | Lightweight HTML, CSS, and JavaScript engine (binary-only, no source available) |
 
 ## Networking & Communication
 | Library           | License      | Purpose |
