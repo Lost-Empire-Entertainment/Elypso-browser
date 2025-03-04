@@ -85,7 +85,7 @@ namespace Graphics
 
 		glfwSetMouseButtonCallback(window, Input::MouseButtonCallback);
 		glfwSetScrollCallback(window, Input::ScrollCallback);
-		glfwSetKeyCallback(window, Content::ForwardGLFWEvents);
+		glfwSetKeyCallback(window, Input::KeyCallback);
 		glfwSetCursorPosCallback(window, Input::MouseMovementCallback);
 
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* window) { Browser::Shutdown(); });
@@ -130,6 +130,14 @@ namespace Graphics
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		GUI_Browser::Render();
+
+		//process Sciter UI events
+		MSG msg{};
+		while (PeekMessage(&msg, Content::window, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
 
 		//swap the front and back buffers
 		glfwSwapBuffers(window);

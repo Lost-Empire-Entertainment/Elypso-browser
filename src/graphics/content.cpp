@@ -31,6 +31,10 @@ namespace Graphics
 {
 	void Content::Initialize()
 	{
+		//
+		// INITIALIZE SCITER
+		//
+
 		//load sciter dll
 		HMODULE hSciter = ::LoadLibrary("sciter.dll");
 		if (!hSciter)
@@ -60,6 +64,10 @@ namespace Graphics
 		}
 		else cout << "Successfully loaded SciterAPI()!\n";
 
+		//
+		// CREATE SCITER WINDOW
+		//
+
 		//create an embedded sciter window
 		window = SciterCreateWindow(
 			SW_CHILD, 
@@ -74,6 +82,41 @@ namespace Graphics
 		}
 		else cout << "Successfully created Sciter window!\n";
 
+		//remove title bar and borders
+		LONG style = GetWindowLong(window, GWL_STYLE);
+		style &= ~(
+			WS_CAPTION
+			| WS_MAXIMIZEBOX
+			| WS_SIZEBOX
+			| WS_THICKFRAME);
+		style |= WS_POPUP;
+		SetWindowLong(window, GWL_STYLE, style);
+
+		//remove extra styles
+		LONG exStyle = GetWindowLong(window, GWL_EXSTYLE);
+		exStyle &= ~WS_EX_DLGMODALFRAME;
+		SetWindowLong(window, GWL_EXSTYLE, exStyle);
+
+		//prevent user resizing from system events
+		SetWindowLongPtr(
+			window,
+			GWL_STYLE,
+			GetWindowLongPtr(window, GWL_STYLE)
+			& ~WS_SIZEBOX);
+		SetWindowLongPtr(
+			window,
+			GWL_EXSTYLE,
+			GetWindowLongPtr(window, GWL_EXSTYLE)
+			& ~WS_EX_WINDOWEDGE);
+
+		//set parent window
+		HWND glfwWindow = glfwGetWin32Window(Render::window);
+		SetParent(window, glfwWindow);
+
+		//
+		// LOAD HOMEPAGE
+		//
+
 		//load an HTML file
 		string HTMLFilePath = (path(Browser::filesPath) / "htmlTest.html").string();
 		if (!exists(HTMLFilePath))
@@ -85,32 +128,21 @@ namespace Graphics
 		wstring wideHTMLFilePath(HTMLFilePath.begin(), HTMLFilePath.end());
 		SciterLoadFile(window, wideHTMLFilePath.c_str());
 
-		//set parent window
-		HWND glfwWindow = glfwGetWin32Window(Render::window);
-		SetParent(window, glfwWindow);
+		//
+		// FINAL TWEAKS
+		//
 
-		//adjust styles to remove border
-		LONG style = GetWindowLong(window, GWL_STYLE);
-		style &= ~(WS_CAPTION | WS_THICKFRAME); //remove title bar and resize frame
-		SetWindowLong(window, GWL_STYLE, style);
-	}
+		//ensure Sciter is visible and always on top
+		ShowWindow(window, SW_SHOW);
+		RedrawWindow(
+			window, 
+			NULL, 
+			NULL, 
+			RDW_INVALIDATE 
+			| RDW_UPDATENOW);
 
-	void Content::ForwardGLFWEvents(
-		GLFWwindow* glfwWindow,
-		int key,
-		int scanCode,
-		int action,
-		int mods)
-	{
-		if (window)
-		{
-			//convert GLFW events to Windows messages for Sciter
-			UINT msg = (action == GLFW_PRESS) ? WM_KEYDOWN : WM_KEYUP;
-			WPARAM wParam = key;
-			LPARAM lParam = 0;
-
-			SciterProcND(window, msg, wParam, lParam, nullptr);
-		}
+		//bring Sciter to front but below full-screen apps
+		SetWindowPos(window, HWND_TOP, 0, 0, 800, 600, SWP_SHOWWINDOW);
 	}
 
 	void Content::LoadContent(const wchar_t* path)

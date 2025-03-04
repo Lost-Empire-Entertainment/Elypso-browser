@@ -28,6 +28,5 @@ namespace Graphics
 		static void UpdateAfterRescale(GLFWwindow* window, int width, int height);
 
 		static void WindowLoop();
-	private:
 	};
 }

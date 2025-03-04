@@ -292,19 +292,35 @@ namespace GUI
 
 		if (ImGui::Begin("MainWindow", NULL, windowFlags))
 		{
-			ImVec2 pos = ImGui::GetWindowPos();
 			ImVec2 size = ImGui::GetWindowSize();
 
 			if (Content::window)
 			{
+				//resize Sciter window to match ImGui
 				SetWindowPos(
 					Content::window,
-					HWND_TOP,
-					(int)pos.x,
-					(int)pos.y,
+					HWND_TOPMOST,
+					0,
+					110,
 					(int)size.x,
 					(int)size.y,
-					SWP_NOZORDER);
+					SWP_NOZORDER
+					| SWP_SHOWWINDOW);
+
+				//force Sciter to refresh its layout
+				SendMessage(
+					Content::window,
+					WM_SIZE,
+					0,
+					MAKELPARAM((int)size.x, (int)size.y));
+
+				//force Sciter redraw
+				RedrawWindow(
+					Content::window, 
+					NULL, 
+					NULL, 
+					RDW_INVALIDATE 
+					| RDW_UPDATENOW);
 			}
 
 			//RenderBrowserMainWindowContent();

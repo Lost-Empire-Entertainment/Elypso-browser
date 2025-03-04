@@ -7,7 +7,6 @@
 
 //external
 #include "sciter-x.h"
-#include "glfw3.h"
 
 namespace Graphics
 {
@@ -17,13 +16,6 @@ namespace Graphics
 		static inline HWINDOW window;
 
 		static void Initialize();
-
-		static void ForwardGLFWEvents(
-			GLFWwindow* glfwWindow,
-			int key,
-			int scanCode,
-			int action,
-			int mods);
 
 		static void LoadContent(const wchar_t* path);
 		static void UpdateContent();
