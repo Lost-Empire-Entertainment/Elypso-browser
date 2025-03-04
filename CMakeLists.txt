@@ -46,8 +46,6 @@ set(EXT_GLM_DIR "${CMAKE_SOURCE_DIR}/_external_shared/GLM")
 set(EXT_IMGUI_DIR "${CMAKE_SOURCE_DIR}/_external_shared/ImGui")
 set(EXT_STB_IMAGE_DIR "${CMAKE_SOURCE_DIR}/_external_shared/Stb_image")
 set(EXT_BROTLI_DIR "${CMAKE_SOURCE_DIR}/_external_shared/Brotli")
-set(EXT_FREETYPE_DIR "${CMAKE_SOURCE_DIR}/_external_shared/FreeType")
-set(EXT_HARFBUZZ_DIR "${CMAKE_SOURCE_DIR}/_external_shared/HarfBuzz")
 set(EXT_LEXBOR_DIR "${CMAKE_SOURCE_DIR}/_external_shared/Lexbor")
 set(EXT_LIBCURL_DIR "${CMAKE_SOURCE_DIR}/_external_shared/LibCurl")
 set(EXT_LIBDATACHANNEL_DIR "${CMAKE_SOURCE_DIR}/_external_shared/LibDataChannel")
@@ -77,17 +75,6 @@ set(BROTLI_LIBRARY2_PATH $<IF:$<CONFIG:Debug>,
 set(BROTLI_LIBRARY3_PATH $<IF:$<CONFIG:Debug>, 
     "${EXT_BROTLI_DIR}/debug/brotlienc.lib" , 
     "${EXT_BROTLI_DIR}/release/brotlienc.lib" > )
-# Add FreeType
-set(FREETYPE_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
-    "${EXT_FREETYPE_DIR}/debug/freetyped.lib" , 
-    "${EXT_FREETYPE_DIR}/release/freetype.lib" > )
-# Add HarfBuzz
-set(HARFBUZZ_LIBRARY1_PATH $<IF:$<CONFIG:Debug>, 
-    "${EXT_HARFBUZZ_DIR}/debug/harfbuzz.lib" , 
-    "${EXT_HARFBUZZ_DIR}/release/harfbuzz.lib" > )
-set(HARFBUZZ_LIBRARY2_PATH $<IF:$<CONFIG:Debug>, 
-    "${EXT_HARFBUZZ_DIR}/debug/harfbuzz-subset.lib" , 
-    "${EXT_HARFBUZZ_DIR}/release/harfbuzz-subset.lib" > )
 # Add Lexbor
 set(LEXBOR_LIBRARY_PATH $<IF:$<CONFIG:Debug>, 
     "${EXT_LEXBOR_DIR}/debug/lexbor.lib" , 
@@ -180,8 +167,6 @@ target_include_directories(ElypsoBrowser PRIVATE
 	${EXT_IMGUI_DIR}
 	${EXT_STB_IMAGE_DIR}
 	${EXT_BROTLI_DIR}
-	${EXT_FREETYPE_DIR}
-	${EXT_HARFBUZZ_DIR}
 	${EXT_LEXBOR_DIR}
 	${EXT_LIBCURL_DIR}
 	${EXT_LIBDATACHANNEL_DIR}
@@ -200,9 +185,6 @@ target_link_libraries(ElypsoBrowser PRIVATE
 	${BROTLI_LIBRARY1_PATH}
 	${BROTLI_LIBRARY2_PATH}
 	${BROTLI_LIBRARY3_PATH}
-	${FREETYPE_LIBRARY_PATH}
-	${HARFBUZZ_LIBRARY1_PATH}
-	${HARFBUZZ_LIBRARY2_PATH}
 	${LEXBOR_LIBRARY_PATH}
 	${LIBCURL_LIBRARY_PATH}
 	${LIBDATACHANNEL_LIBRARY_PATH}
