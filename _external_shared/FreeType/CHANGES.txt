@@ -1,6 +1,0 @@
-Original repository link:
-https://github.com/freetype/freetype
-
-- ran build_release.bat and copied dll and lib files to release folder and header files to root folder
-- ran build_debug.bat and copied dll and lib files to debug folder
-- deleted all other files
