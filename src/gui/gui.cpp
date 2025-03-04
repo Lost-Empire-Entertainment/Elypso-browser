@@ -293,108 +293,12 @@ namespace GUI
 		if (ImGui::Begin("MainWindow", NULL, windowFlags))
 		{
 			ImVec2 size = ImGui::GetWindowSize();
-
-			if (Content::window)
-			{
-				//resize Sciter window to match ImGui
-				SetWindowPos(
-					Content::window,
-					HWND_TOPMOST,
-					0,
-					110,
-					(int)size.x,
-					(int)size.y,
-					SWP_NOZORDER
-					| SWP_SHOWWINDOW);
-
-				//force Sciter to refresh its layout
-				SendMessage(
-					Content::window,
-					WM_SIZE,
-					0,
-					MAKELPARAM((int)size.x, (int)size.y));
-
-				//force Sciter redraw
-				RedrawWindow(
-					Content::window, 
-					NULL, 
-					NULL, 
-					RDW_INVALIDATE 
-					| RDW_UPDATENOW);
-			}
-
-			//RenderBrowserMainWindowContent();
+			Content::UpdateContent(size.x, size.y);
 
 			ImGui::End();
 		}
 
 		ImGui::PopStyleVar();
-	}
-
-	void GUI_Browser::RenderBrowserMainWindowContent()
-	{
-		bool previousWasHeading = false;
-		bool isInsideSection = false;
-
-		for (const auto& element : HTMLParser::parsedElements)
-		{
-			if (element.tag == "h1" 
-				|| element.tag == "h2")
-			{
-				if (isInsideSection)
-				{
-					ImGui::Separator();  //separate sections visually
-				}
-				isInsideSection = true;
-			}
-
-			if (element.tag == "h1")
-			{
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f)); //white
-				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 12));
-
-				ImGui::TextUnformatted(element.text.c_str()); //bold
-
-				ImGui::PopStyleColor();
-				ImGui::PopStyleVar();
-				ImGui::Spacing();
-				previousWasHeading = true;
-			}
-			else if (element.tag == "h2")
-			{
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.8f, 0.8f, 0.8f, 1.0f)); //light gray
-				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 8));
-
-				ImGui::TextUnformatted(element.text.c_str()); //slightly smaller but still bold
-
-				ImGui::PopStyleColor();
-				ImGui::PopStyleVar();
-				ImGui::Spacing();
-				previousWasHeading = true;
-			}
-			else if (element.tag == "p")
-			{
-				//wrapped text for paragraphs
-				ImGui::TextWrapped("%s", element.text.c_str());
-				ImGui::Spacing();
-				previousWasHeading = false;
-			}
-			else if (element.tag == "a")
-			{
-				ImGui::TextColored(ImVec4(0.2f, 0.5f, 1.0f, 1.0f), "%s", element.text.c_str());
-				if (ImGui::IsItemClicked())
-				{
-					cout << "Clicked link: " << element.text << "\n";
-				}
-				ImGui::Spacing();
-				previousWasHeading = false;
-			}
-
-			if (previousWasHeading)
-			{
-				ImGui::Separator();
-			}
-		}
 	}
 
 	void GUI_Browser::Shutdown()

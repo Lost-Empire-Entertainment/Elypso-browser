@@ -18,6 +18,15 @@ namespace Graphics
 		static void Initialize();
 
 		static void LoadContent(const wchar_t* path);
-		static void UpdateContent();
+
+		/// <summary>
+		/// Regular Sciter window position and scale update
+		/// </summary>
+		static void UpdateContent(int sizeX, int sizeY);
+
+		/// <summary>
+		/// Force-redraws Sciter window content, only necessary in rare cases.
+		/// </summary>
+		static void ForceRedraw(int sizeX, int sizeY);
 	};
 }

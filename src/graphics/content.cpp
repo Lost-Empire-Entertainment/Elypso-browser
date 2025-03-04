@@ -119,25 +119,77 @@ namespace Graphics
 		}
 		else cout << "Successfully found HTML test file!\n";
 		wstring wideHTMLFilePath(HTMLFilePath.begin(), HTMLFilePath.end());
-		SciterLoadFile(window, wideHTMLFilePath.c_str());
+		LoadContent(wideHTMLFilePath.c_str());
 	}
 
 	void Content::LoadContent(const wchar_t* path)
 	{
-		/*
-		if (!SciterLoadFile(hWnd, path))
+		int sizeNeeded = WideCharToMultiByte(
+			CP_UTF8,
+			0,
+			path,
+			-1,
+			nullptr,
+			0,
+			nullptr,
+			nullptr);
+
+		string pathStr(sizeNeeded, 0);
+
+		WideCharToMultiByte(
+			CP_UTF8,
+			0,
+			path,
+			-1,
+			&pathStr[0],
+			sizeNeeded,
+			nullptr,
+			nullptr);
+
+		pathStr.pop_back();
+
+		if (!SciterLoadFile(window, path))
 		{
-			cout << "Failed to load Sciter UI: '" << path << "'!\n";
+			cout << "Failed to load Sciter UI: '" << pathStr << "'!\n";
 		}
 		else
 		{
-			cout << "Sciter UI loaded: '" << path << "'!\n";
+			cout << "Sciter UI loaded: '" << pathStr << "'!\n";
 		}
-		*/
 	}
 
-	void Content::UpdateContent()
+	void Content::UpdateContent(int sizeX, int sizeY)
 	{
+		if (Content::window)
+		{
+			//resize Sciter window to match ImGui
+			SetWindowPos(
+				Content::window,
+				HWND_TOPMOST,
+				0,
+				110,
+				sizeX,
+				sizeY,
+				SWP_NOZORDER
+				| SWP_SHOWWINDOW);
+		}
+	}
 
+	void Content::ForceRedraw(int sizeX, int sizeY)
+	{
+		//force Sciter to refresh its layout
+		SendMessage(
+			Content::window,
+			WM_SIZE,
+			0,
+			MAKELPARAM(sizeX, sizeY));
+
+		//force Sciter redraw
+		RedrawWindow(
+			Content::window,
+			NULL,
+			NULL,
+			RDW_INVALIDATE
+			| RDW_UPDATENOW);
 	}
 }
