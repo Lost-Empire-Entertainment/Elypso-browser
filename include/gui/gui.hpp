@@ -34,5 +34,7 @@ namespace GUI
 
 		static void RenderTopBar();
 		static void RenderBrowserTopWindow();
+
+		static void LoadPageInThread(const string& URL);
 	};
 }

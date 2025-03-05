@@ -6,6 +6,8 @@
 #include <filesystem>
 #include <iostream>
 #include <thread>
+#include <atomic>
+#include <mutex>
 
 //external
 #include "imgui_impl_glfw.h"
@@ -34,14 +36,19 @@ using Graphics::Content;
 using std::filesystem::exists;
 using std::filesystem::path;
 using std::cout;
-
 using std::thread;
+using std::lock_guard;
+using std::atomic;
+using std::mutex;
 
 namespace GUI
 {
 	static ImVec4 bgrColor;
 	static ImVec4 cubeColor;
 	static ImVec4 specularColor;
+
+	atomic<bool> isPageLoading(false);
+	mutex loadingMutex;
 
 	void GUI_Browser::Initialize()
 	{
@@ -268,12 +275,36 @@ namespace GUI
 			{
 				websiteString = string(websiteChar);
 				cout << "Searching for '" << websiteString << "'!\n";
-				thread t(NetworkManager::ParseURL, websiteString);
-				t.detach();
+
+				LoadPageInThread(websiteString);
 			}
 
 			ImGui::End();
 		}
+	}
+
+	void GUI_Browser::LoadPageInThread(const string& URL)
+	{
+		lock_guard<mutex> lock(loadingMutex);
+
+		if (isPageLoading)
+		{
+			cout << "Error: Cannot load page! Old page is still loading...\n";
+			return;
+		}
+
+		isPageLoading = true;
+
+		thread([URL]() 
+		{
+			NetworkManager::ParseURL(URL);
+
+			//ensure isPageLoading is reset only when the page finishes loading
+			{
+				lock_guard<mutex> lock(loadingMutex);
+				isPageLoading = false;
+			}
+		}).detach();
 	}
 
 	void GUI_Browser::Shutdown()

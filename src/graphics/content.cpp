@@ -158,19 +158,9 @@ namespace Graphics
 			return;
 		}
 
-		//look for <noscript> tags
-		regex noscriptRegex(R"(<noscript>[\s\S]*?<\/noscript>)", regex::icase);
-		//detect data-* attributes
-		regex jsAttrRegex(R"(data-[a-zA-Z0-9_-]+="[^"]*")", regex::icase);
-		//look for AJAX calls (fetch())
-		regex ajaxRegex(R"(fetch\s*\(|XMLHttpRequest)", regex::icase);
-
-		bool noscriptJS = regex_search(html, noscriptRegex);
-		bool attrRegexJS = regex_search(html, jsAttrRegex);
-		bool ajaxRegexJS = regex_search(html, ajaxRegex);
-		if (noscriptJS
-			|| attrRegexJS
-			|| ajaxRegexJS)
+		regex externalJSRegex(R"(<script\s+[^>]*src=["']([^"']+\.js)["'])", regex::icase);
+		bool hasExternalJS = regex_search(html, externalJSRegex);
+		if (hasExternalJS)
 		{
 			string jsHTML = (path(Browser::filesPath) / "pages" / "jsRequired.html").string();
 			LoadHTMLFromFile(jsHTML);
