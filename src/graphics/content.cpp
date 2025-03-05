@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <locale>
 #include <codecvt>
+#include <regex>
 
 //external
 #include "glfw3.h"
@@ -24,6 +25,8 @@ using std::cout;
 using std::filesystem::path;
 using std::filesystem::exists;
 using std::wstring;
+using std::regex;
+using std::regex_replace;
 
 namespace Graphics
 {
@@ -116,49 +119,25 @@ namespace Graphics
 		// LOAD HOMEPAGE
 		//
 
-		//load an HTML file
-		string HTMLFilePath = (path(Browser::filesPath) / "htmlTest.html").string();
-		if (!exists(HTMLFilePath))
-		{
-			cout << "Error: Failed to find HTML text file at '" << HTMLFilePath << "'!\n";
-			return;
-		}
-		else cout << "Successfully found HTML test file!\n";
-		wstring wideHTMLFilePath(HTMLFilePath.begin(), HTMLFilePath.end());
-		LoadHTMLFromFile(wideHTMLFilePath.c_str());
+		string homeHTML = (path(Browser::filesPath) / "pages" / "home.html").string();
+		LoadHTMLFromFile(homeHTML);
 	}
 
-	void Content::LoadHTMLFromFile(const wchar_t* path)
+	void Content::LoadHTMLFromFile(const string& path)
 	{
 		cout << "Started loading HTML from file...\n";
 
-		int sizeNeeded = WideCharToMultiByte(
-			CP_UTF8,
-			0,
-			path,
-			-1,
-			nullptr,
-			0,
-			nullptr,
-			nullptr);
-
-		string pathStr(sizeNeeded, 0);
-
-		WideCharToMultiByte(
-			CP_UTF8,
-			0,
-			path,
-			-1,
-			&pathStr[0],
-			sizeNeeded,
-			nullptr,
-			nullptr);
-
-		pathStr.pop_back();
-
-		if (!SciterLoadFile(window, path))
+		if (!exists(path))
 		{
-			cout << "Error: Failed to load Sciter from HTML file: '" << pathStr << "'!\n";
+			cout << "Error: Failed to find HTML file at '" << path << "'!\n";
+			return;
+		}
+		else cout << "Successfully found HTML file! Starting to load...\n";
+
+		wstring wideHTMLFilePath(path.begin(), path.end());
+		if (!SciterLoadFile(window, wideHTMLFilePath.c_str()))
+		{
+			cout << "Error: Failed to load Sciter from HTML file: '" << path << "'!\n";
 		}
 		else cout << "Successfully loaded Sciter from HTML file!\n";
 	}
@@ -179,19 +158,39 @@ namespace Graphics
 			return;
 		}
 
-		//convert the string to Sciter-compatible format
-		LPCBYTE htmlData = (LPCBYTE)html.c_str();
-		UINT dataLength = (UINT)html.length();
+		//look for <noscript> tags
+		regex noscriptRegex(R"(<noscript>[\s\S]*?<\/noscript>)", regex::icase);
+		//detect data-* attributes
+		regex jsAttrRegex(R"(data-[a-zA-Z0-9_-]+="[^"]*")", regex::icase);
+		//look for AJAX calls (fetch())
+		regex ajaxRegex(R"(fetch\s*\(|XMLHttpRequest)", regex::icase);
 
-		if (!SciterLoadHtml(
-			window,
-			htmlData,
-			dataLength,
-			NULL))
+		bool noscriptJS = regex_search(html, noscriptRegex);
+		bool attrRegexJS = regex_search(html, jsAttrRegex);
+		bool ajaxRegexJS = regex_search(html, ajaxRegex);
+		if (noscriptJS
+			|| attrRegexJS
+			|| ajaxRegexJS)
 		{
-			cout << "Error: Failed to load Sciter from memory!\n";
+			string jsHTML = (path(Browser::filesPath) / "pages" / "jsRequired.html").string();
+			LoadHTMLFromFile(jsHTML);
 		}
-		else cout << "Successfully loaded Sciter from memory!\n";
+		else
+		{
+			//convert the string to Sciter-compatible format
+			LPCBYTE htmlData = (LPCBYTE)html.c_str();
+			UINT dataLength = (UINT)html.length();
+
+			if (!SciterLoadHtml(
+				window,
+				htmlData,
+				dataLength,
+				NULL))
+			{
+				cout << "Error: Failed to load Sciter from memory!\n";
+			}
+			else cout << "Successfully loaded Sciter from memory!\n";
+		}
 	}
 
 	vec4 Content::GetPosAndSize()

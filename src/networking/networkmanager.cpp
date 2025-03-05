@@ -18,8 +18,10 @@
 #include "httpresponse.hpp"
 #include "core.hpp"
 #include "htmlparser.hpp"
+#include "content.hpp"
 
 using Core::Browser;
+using Graphics::Content;
 
 using std::cout;
 using std::regex;
@@ -33,6 +35,8 @@ namespace Networking
 {
 	bool NetworkManager::HasInternet()
 	{
+		if (localFiles.empty()) FillLocalFilePaths();
+
 		CURL* curl = curl_easy_init();
 		if (!curl) 
 		{
@@ -95,6 +99,38 @@ namespace Networking
 			return;
 		}
 
+		if (URL[0] == '/') ParseLocalFileURL(URL);
+		else ParseWebsiteURL(URL);
+	}
+
+	void NetworkManager::FillLocalFilePaths()
+	{
+		localFiles = unordered_map<string, string>
+		{
+			{ "/home",       "home.html" },
+			{ "/jsRequired", "jsRequired.html" },
+			{ "/about",      "about.html" }
+		};
+	}
+
+	void NetworkManager::ParseLocalFileURL(const string& URL)
+	{
+		auto it = localFiles.find(URL);
+		if (it == localFiles.end())
+		{
+			cout << "Error: Failed to find local URL '" << URL << "'!\n";
+			return;
+		}
+		else
+		{
+			string fileName = it->second;
+			string fullURL = (path(Browser::filesPath) / "pages" / fileName).string();
+			Content::LoadHTMLFromFile(fullURL);
+		}
+	}
+
+	void NetworkManager::ParseWebsiteURL(const string& URL)
+	{
 		regex urlRegex(R"(^(https?)://([^/]+)(/?.*)$)");
 		smatch match;
 
@@ -110,8 +146,8 @@ namespace Networking
 
 		if (path.empty()) path = "/";
 
-		cout << "Parsed URL - Protocol: " << protocol 
-			<< ", Host: " << host 
+		cout << "Parsed URL - Protocol: " << protocol
+			<< ", Host: " << host
 			<< ", Path: " << path << "\n";
 
 		//create a new request

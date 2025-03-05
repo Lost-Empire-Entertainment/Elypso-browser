@@ -6,10 +6,12 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 
 namespace Networking
 {
 	using std::string;
+	using std::unordered_map;
 
 	class NetworkManager
 	{
@@ -17,5 +19,12 @@ namespace Networking
 		static bool HasInternet();
 
 		static void ParseURL(const string& URL);
+	private:
+		static inline unordered_map<string, string> localFiles;
+
+		static void FillLocalFilePaths();
+
+		static void ParseLocalFileURL(const string& URL);
+		static void ParseWebsiteURL(const string& URL);
 	};
 }

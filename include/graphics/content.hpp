@@ -41,7 +41,7 @@ namespace Graphics
 		/// <summary>
 		/// Load directly from an html file
 		/// </summary>
-		static void LoadHTMLFromFile(const wchar_t* path);
+		static void LoadHTMLFromFile(const string& path);
 		/// <summary>
 		/// Load from memory
 		/// </summary>
