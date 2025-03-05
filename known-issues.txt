@@ -3,3 +3,4 @@
 - sciter window min-max height prevents changing browser height below sciter window min height
 - chatgpt.com crashes the browser
 - url in search bar does not update to current page url if user interacts with a link in a website
+- limited to html only (no css, js, images, videos and other content)

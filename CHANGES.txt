@@ -1,5 +1,0 @@
-0.0.1:
-
-- can visit any website with search bar
-- can go to browser local pages with /home and /jsRequired
-- sciter window updates its position and scale based off of browser window
