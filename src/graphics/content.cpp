@@ -18,8 +18,10 @@
 #include "content.hpp"
 #include "core.hpp"
 #include "render.hpp"
+#include "gui.hpp"
 
 using Core::Browser;
+using GUI::GUI_Browser;
 
 using std::cout;
 using std::filesystem::path;
@@ -140,6 +142,11 @@ namespace Graphics
 			cout << "Error: Failed to load Sciter from HTML file: '" << path << "'!\n";
 		}
 		else cout << "Successfully loaded Sciter from HTML file!\n";
+
+		GUI_Browser::SetSearchBarText(path);
+
+		//force a redraw after loading a html page from a file
+		UpdateContent();
 	}
 
 	void Content::LoadHTMLFromMemory(const string& html)
@@ -158,6 +165,7 @@ namespace Graphics
 			return;
 		}
 
+		/*
 		regex externalJSRegex(R"(<script\s+[^>]*src=["']([^"']+\.js)["'])", regex::icase);
 		bool hasExternalJS = regex_search(html, externalJSRegex);
 		if (hasExternalJS)
@@ -181,6 +189,21 @@ namespace Graphics
 			}
 			else cout << "Successfully loaded Sciter from memory!\n";
 		}
+		*/
+
+		//convert the string to Sciter-compatible format
+		LPCBYTE htmlData = (LPCBYTE)html.c_str();
+		UINT dataLength = (UINT)html.length();
+
+		if (!SciterLoadHtml(
+			window,
+			htmlData,
+			dataLength,
+			NULL))
+		{
+			cout << "Error: Failed to load Sciter from memory!\n";
+		}
+		else cout << "Successfully loaded Sciter from memory!\n";
 	}
 
 	vec4 Content::GetPosAndSize()
@@ -200,14 +223,61 @@ namespace Graphics
 			sizeY);
 	}
 
-	void Content::UpdateContent(const vec4& posAndSize)
+	void Content::UpdateContent()
 	{
 		if (Content::window)
 		{
-			int posX = posAndSize.x;
-			int posY = posAndSize.y;
-			int sizeX = posAndSize.z;
-			int sizeY = posAndSize.w;
+			const vec4& posAndSize = GetPosAndSize();
+
+			/*
+			static int prevPosX = -1;
+			static int prevPosY = -1;
+			static int prevSizeX = -1;
+			static int prevSizeY = -1;
+
+			RECT rect{};
+			GetWindowRect(Content::window, &rect);
+
+			int rectPosX = rect.left;               //Current X position
+			int rectPosY = rect.top;                //Current Y position
+			int rectSizeX = rect.right - rect.left; //Current X size
+			int rectSizeY = rect.bottom - rect.top; //Current Y size
+			
+			int posX = static_cast<int>(posAndSize.x + 0.5f);  //Target X position
+			int posY = static_cast<int>(posAndSize.y + 0.5f);  //Target Y position
+			int sizeX = static_cast<int>(posAndSize.z + 0.5f); //Target X size
+			int sizeY = static_cast<int>(posAndSize.w + 0.5f); //Target Y size
+
+			if (prevPosX != posX
+				|| prevPosY != posY
+				|| prevSizeX != sizeX
+				|| prevSizeY != sizeY)
+			{
+				//resize Sciter window to match ImGui
+				SetWindowPos(
+					Content::window,
+					HWND_TOPMOST,
+					posX,
+					posY,
+					sizeX,
+					sizeY,
+					SWP_NOZORDER
+					| SWP_NOACTIVATE
+					| SWP_SHOWWINDOW);
+
+				prevPosX = posX;
+				prevPosY = posY;
+				prevSizeX = sizeX;
+				prevSizeY = sizeY;
+
+				cout << "Sciter window was redrawn!\n";
+			}
+			*/
+
+			int posX = static_cast<int>(posAndSize.x + 0.5f);  //Target X position
+			int posY = static_cast<int>(posAndSize.y + 0.5f);  //Target Y position
+			int sizeX = static_cast<int>(posAndSize.z + 0.5f); //Target X size
+			int sizeY = static_cast<int>(posAndSize.w + 0.5f); //Target Y size
 
 			//resize Sciter window to match ImGui
 			SetWindowPos(
@@ -223,8 +293,10 @@ namespace Graphics
 		}
 	}
 
-	void Content::ForceRedraw(const vec4& posAndSize)
+	void Content::ForceRedraw()
 	{
+		const vec4& posAndSize = GetPosAndSize();
+		
 		int sizeX = posAndSize.z;
 		int sizeY = posAndSize.w;
 
@@ -270,11 +342,20 @@ namespace Graphics
 	{
 		if (msg == WM_LOAD_HTML)
 		{
-			cout << "WM_LOAD_HTML\n";
-
 			string* html = reinterpret_cast<string*>(lParam);
 			LoadHTMLFromMemory(*html);
+
 			delete html;
+			return 0;
+		}
+		else if (msg == WM_LOAD_CSS)
+		{
+			string* css = reinterpret_cast<string*>(lParam);
+			SciterAppendMasterCSS(
+				reinterpret_cast<LPCBYTE>(css->c_str()), 
+				css->length());
+
+			delete css;
 			return 0;
 		}
 		return CallWindowProc(

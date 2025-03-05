@@ -18,6 +18,10 @@ namespace GUI
 	{
 	public:
 		static void Initialize();
+		/// <summary>
+		/// Update the text displayed on the search page
+		/// </summary>
+		static void SetSearchBarText(const string& text);
 
 		static ImVec2 CenterWindow(const ImVec2& size);
 

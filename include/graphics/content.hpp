@@ -6,19 +6,22 @@
 //Used for sending parsed HTML data from worker thread to main thread
 #define WM_LOAD_HTML (WM_APP + 1)
 
+//Used for sending parsed CSS data from worker thread to main thread
+#define WM_LOAD_CSS (WM_APP + 1)
+
 #pragma once
 
 #include <string>
 
-#include "glm.hpp"
-
 //external
+#include "glm.hpp"
 #include "sciter-x.h"
 
 namespace Graphics
 {
 	using std::string;
 	using glm::vec4;
+	using std::wstring;
 
 	class Content
 	{
@@ -48,20 +51,20 @@ namespace Graphics
 		static void LoadHTMLFromMemory(const string& html);
 
 		/// <summary>
-		/// Returns the position and scale Sciter window should use
-		/// </summary>
-		static vec4 GetPosAndSize();
-
-		/// <summary>
 		/// Regular Sciter window position and scale update
 		/// </summary>
-		static void UpdateContent(const vec4& posAndSize);
+		static void UpdateContent();
 
 		/// <summary>
 		/// Force-redraws Sciter window content, only necessary in rare cases.
 		/// </summary>
-		static void ForceRedraw(const vec4& posAndSize);
+		static void ForceRedraw();
 	private:
+		/// <summary>
+		/// Returns the position and scale Sciter window should use
+		/// </summary>
+		static vec4 GetPosAndSize();
+
 		static void SubclassGLFWWindow();
 
 		/// <summary>

@@ -8,6 +8,7 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
+#include <cstring>
 
 //external
 #include "imgui_impl_glfw.h"
@@ -40,6 +41,7 @@ using std::thread;
 using std::lock_guard;
 using std::atomic;
 using std::mutex;
+using std::strncpy;
 
 namespace GUI
 {
@@ -177,6 +179,13 @@ namespace GUI
 		style.Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.0f, 1.0f, 1.0f, 0.699999988079071f);
 		style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.2000000029802322f);
 		style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.3499999940395355f);
+	}
+
+	void GUI_Browser::SetSearchBarText(const string& text)
+	{
+		string correctUrl = "/" + (path(text)).stem().string();
+		strncpy(websiteChar, correctUrl.c_str(), static_cast<size_t>(bufferSize) - 1);
+		websiteChar[bufferSize - 1] = '\0';
 	}
 
 	ImVec2 GUI_Browser::CenterWindow(const ImVec2& size)

@@ -139,8 +139,7 @@ namespace Graphics
 
 		GUI_Browser::Render();
 
-		const vec4& posAndSize = Content::GetPosAndSize();
-		Content::UpdateContent(posAndSize);
+		Content::UpdateContent();
 
 		//swap the front and back buffers
 		glfwSwapBuffers(window);
